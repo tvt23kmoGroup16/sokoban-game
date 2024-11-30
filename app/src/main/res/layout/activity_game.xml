@@ -4,17 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@android:color/white">
 
     <!-- Game Map -->
-    <TextView
-        android:id="@+id/tv_game_map"
+    <GridLayout
+        android:id="@+id/grid_game_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Game Map"
-        android:textSize="18sp"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="monospace"/>
+        android:rowCount="7"
+        android:columnCount="5"
+        android:padding="8dp"
+        android:background="#CCCCCC"
+        android:layout_gravity="center" />
 
     <!-- Game Status -->
     <TextView
@@ -23,68 +25,69 @@
         android:layout_height="wrap_content"
         android:text="Game Status"
         android:textSize="16sp"
-        android:layout_marginBottom="20dp" />
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_horizontal" />
 
     <!-- Movement Keys -->
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:columnCount="3"
-        android:rowCount="3"
-        android:orientation="horizontal"
         android:layout_gravity="center">
 
-        <!-- Empty space -->
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_margin="8dp"
-            android:visibility="invisible"/>
+        <!-- Empty cell for alignment -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnSpan="1" />
 
-        <!-- Up Arrow  -->
+        <!-- Up Arrow -->
         <Button
             android:id="@+id/btn_up"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:text="↑"
             android:textSize="24sp"
-            android:layout_margin="8dp"/>
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:layout_margin="8dp" />
 
-        <!-- Empty space  -->
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_margin="8dp"
-            android:visibility="invisible"/>
+        <!-- Empty cell for alignment -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnSpan="1" />
 
-        <!-- Left Arrow  -->
+        <!-- Left Arrow -->
         <Button
             android:id="@+id/btn_left"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:text="←"
             android:textSize="24sp"
-            android:layout_margin="8dp"/>
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:layout_margin="8dp" />
 
-        <!-- Down Arrow  -->
+        <!-- Down Arrow -->
         <Button
             android:id="@+id/btn_down"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:text="↓"
             android:textSize="24sp"
-            android:layout_margin="8dp"/>
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:layout_margin="8dp" />
 
-        <!-- Right Arrow  -->
+        <!-- Right Arrow -->
         <Button
             android:id="@+id/btn_right"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:text="→"
             android:textSize="24sp"
-            android:layout_margin="8dp"/>
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:layout_margin="8dp" />
 
     </GridLayout>
 
