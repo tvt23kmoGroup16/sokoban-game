@@ -2,40 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:background="@android:color/white"
     android:gravity="center"
-    android:background="@android:color/white">
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <!-- Game Map -->
     <GridLayout
         android:id="@+id/grid_game_map"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:rowCount="7"
-        android:columnCount="5"
-        android:padding="8dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
         android:background="#CCCCCC"
-        android:layout_gravity="center" />
+        android:columnCount="12"
+        android:rowCount="12" />
 
     <!-- Game Status -->
     <TextView
         android:id="@+id/tv_game_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Game Status"
-        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Moves: 0"
         android:textColor="@android:color/black"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center_horizontal" />
+        android:textSize="16sp" />
 
     <!-- Movement Keys -->
     <GridLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="240dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="0dp"
         android:columnCount="3"
-        android:layout_gravity="center">
+        android:padding="0dp">
 
         <!-- Empty cell for alignment -->
         <View
@@ -46,12 +48,12 @@
         <!-- Up Arrow -->
         <Button
             android:id="@+id/btn_up"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:text="↑"
-            android:textSize="24sp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
             android:backgroundTint="@android:color/holo_blue_light"
-            android:layout_margin="8dp" />
+            android:text="↑"
+            android:textSize="30sp" />
 
         <!-- Empty cell for alignment -->
         <View
@@ -62,33 +64,62 @@
         <!-- Left Arrow -->
         <Button
             android:id="@+id/btn_left"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:text="←"
-            android:textSize="24sp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
             android:backgroundTint="@android:color/holo_blue_light"
-            android:layout_margin="8dp" />
+            android:text="←"
+            android:textSize="30sp" />
 
         <!-- Down Arrow -->
         <Button
             android:id="@+id/btn_down"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:text="↓"
-            android:textSize="24sp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
             android:backgroundTint="@android:color/holo_blue_light"
-            android:layout_margin="8dp" />
+            android:text="↓"
+            android:textSize="30sp" />
 
         <!-- Right Arrow -->
         <Button
             android:id="@+id/btn_right"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:text="→"
-            android:textSize="24sp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
             android:backgroundTint="@android:color/holo_blue_light"
-            android:layout_margin="8dp" />
-
+            android:text="→"
+            android:textSize="30sp" />
     </GridLayout>
 
+    <!-- Additional Action Buttons -->
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:columnCount="2"
+        android:orientation="horizontal">
+
+        <!-- Restart Button -->
+        <Button
+            android:id="@+id/btn_restart"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:backgroundTint="@android:color/holo_green_light"
+            android:text="Restart"
+            android:textSize="16sp" />
+
+        <!-- Undo Button -->
+        <Button
+            android:id="@+id/btn_undo"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:text="Undo"
+            android:textSize="16sp" />
+
+    </GridLayout>
 </LinearLayout>
