@@ -20,7 +20,8 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
         btnPlay.setOnClickListener {
-            val intent = Intent(this, GameActivity::class.java)
+            // Navigate to LevelSelectionActivity
+            val intent = Intent(this, LevelSelectionActivity::class.java)
             startActivity(intent)
         }
 
