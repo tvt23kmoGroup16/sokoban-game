@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tv_select_character"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Your Character"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:layout_alignParentTop="true" />
+
+    <!-- Left Arrow (TextView) -->
+    <TextView
+        android:id="@+id/btn_arrow_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="←"
+        android:textSize="36sp"
+        android:contentDescription="Previous Character"
+        android:textColor="@android:color/black"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_toStartOf="@id/character_container"
+        android:gravity="center" />
+
+    <!-- Character Image Container -->
+    <FrameLayout
+        android:id="@+id/character_container"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:background="@android:color/darker_gray"
+        android:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/img_character"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/blackquestionmark"
+            android:contentDescription="Character Image" />
+
+    </FrameLayout>
+
+    <!-- Right Arrow (TextView) -->
+    <TextView
+        android:id="@+id/btn_arrow_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="→"
+        android:textSize="36sp"
+        android:contentDescription="Next Character"
+        android:textColor="@android:color/black"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_toEndOf="@id/character_container"
+        android:gravity="center" />
+
+    <!-- Highlight Text -->
+    <TextView
+        android:id="@+id/tv_character_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/character_container"
+        android:layout_centerHorizontal="true"
+        android:text="Character Name"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp" />
+
+    <!-- Confirm Button -->
+    <Button
+        android:id="@+id/btn_confirm_character"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:layout_below="@id/tv_character_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
+</RelativeLayout>

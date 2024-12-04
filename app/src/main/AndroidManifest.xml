@@ -14,9 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
         <activity
-            android:name=".LevelSelectionActivity"
+            android:name=".CharacterActivity"
             android:exported="false" />
-        <!-- android:theme="@style/Theme.Sokoban" -->
+        <activity
+            android:name=".OptionsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".LevelSelectionActivity"
+            android:exported="false" /> <!-- android:theme="@style/Theme.Sokoban" -->
         <activity
             android:name=".MainMenuActivity"
             android:exported="true"
@@ -32,8 +38,7 @@
         <activity
             android:name=".GameActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat"></activity>
-
+            android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>
