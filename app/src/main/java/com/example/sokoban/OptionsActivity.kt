@@ -17,7 +17,7 @@ class OptionsActivity : AppCompatActivity() {
         val seekbarSoundEffectsVolume: SeekBar = findViewById(R.id.seekbar_sound_effects_volume)
         val btnSave: Button = findViewById(R.id.btn_save)
 
-        // Default values (or load from SharedPreferences)
+        // Default values
         seekbarMasterVolume.progress = 50
         seekbarMusicVolume.progress = 50
         seekbarSoundEffectsVolume.progress = 50
@@ -28,24 +28,9 @@ class OptionsActivity : AppCompatActivity() {
             val musicVolume = seekbarMusicVolume.progress
             val soundEffectsVolume = seekbarSoundEffectsVolume.progress
 
-            // Save to SharedPreferences or any persistent storage
-            saveVolumeSettings(masterVolume, musicVolume, soundEffectsVolume)
-
-            // Show a toast message
             Toast.makeText(this, "Settings Saved!", Toast.LENGTH_SHORT).show()
-
             // Close the activity or navigate back
             finish()
         }
-    }
-
-    private fun saveVolumeSettings(master: Int, music: Int, soundEffects: Int) {
-        // Example of saving to SharedPreferences
-        val sharedPref = getSharedPreferences("GameSettings", MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putInt("master_volume", master)
-        editor.putInt("music_volume", music)
-        editor.putInt("sound_effects_volume", soundEffects)
-        editor.apply()
     }
 }
