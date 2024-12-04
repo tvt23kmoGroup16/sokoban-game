@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_options_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Options"
+        android:textSize="24sp"
+        android:layout_marginBottom="24dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv_master_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Master Volume"
+        android:layout_marginBottom="8dp" />
+
+    <SeekBar
+        android:id="@+id/seekbar_master_volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tv_music_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Music Volume"
+        android:layout_marginBottom="8dp" />
+
+    <SeekBar
+        android:id="@+id/seekbar_music_volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tv_sound_effects_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sound Effects Volume"
+        android:layout_marginBottom="8dp" />
+
+    <SeekBar
+        android:id="@+id/seekbar_sound_effects_volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+</LinearLayout>

@@ -14,34 +14,47 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp" />
 
-    <!-- Logo  -->
+    <!-- Logo -->
     <ImageView
         android:id="@+id/img_logo"
         android:layout_width="200dp"
-    android:layout_height="200dp"
-    android:layout_below="@id/btn_login"
-    android:layout_centerHorizontal="true"
-    android:src="@drawable/sokobanlogo"
-    android:contentDescription="App Logo"
-    android:layout_marginTop="50dp" />
+        android:layout_height="200dp"
+        android:layout_below="@id/btn_login"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/sokobanlogo"
+        android:contentDescription="App Logo"
+        android:layout_marginTop="50dp" />
 
-    <!-- Play  -->
+    <!-- Play -->
     <Button
         android:id="@+id/btn_play"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Play"
         android:layout_below="@id/img_logo"
+        android:layout_marginHorizontal="32dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp" />
 
-    <!-- Options  -->
+    <!-- Choose Character -->
+    <Button
+        android:id="@+id/btn_choose_character"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Character"
+        android:layout_below="@id/btn_play"
+        android:layout_marginHorizontal="32dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <!-- Options -->
     <Button
         android:id="@+id/btn_options"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Options"
-        android:layout_below="@id/btn_play"
+        android:layout_below="@id/btn_choose_character"
+        android:layout_marginHorizontal="32dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp" />
 </RelativeLayout>

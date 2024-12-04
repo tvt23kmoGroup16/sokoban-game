@@ -14,6 +14,7 @@ class MainMenuActivity : AppCompatActivity() {
         val btnLogin: Button = findViewById(R.id.btn_login)
         val btnPlay: Button = findViewById(R.id.btn_play)
         val btnOptions: Button = findViewById(R.id.btn_options)
+        val btnChooseCharacter: Button = findViewById(R.id.btn_choose_character)
 
         btnLogin.setOnClickListener {
             // Login action
@@ -26,7 +27,15 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
         btnOptions.setOnClickListener {
-            // Options action
+            // Navigate to OptionsActivity
+            val intent = Intent(this, OptionsActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnChooseCharacter.setOnClickListener {
+            // Navigate to CharacterActivity
+            val intent = Intent(this, CharacterActivity::class.java)
+            startActivity(intent)
         }
     }
 }
