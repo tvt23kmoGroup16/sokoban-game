@@ -40,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        dataBinding =true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -54,6 +55,7 @@ android {
 dependencies {
 
     implementation(libs.badlogicgames.gdx)
+    implementation(libs.bcrypt)
     implementation (libs.gson)
     implementation (libs.androidx.room.runtime)
     implementation(libs.androidx.appcompat)

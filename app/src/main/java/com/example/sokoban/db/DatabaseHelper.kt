@@ -9,6 +9,8 @@ import com.example.sokoban.db.contracts.LevelContract
 import com.example.sokoban.db.contracts.SettingsContract
 import com.example.sokoban.db.contracts.HighScoreContract
 import android.database.Cursor
+import org.mindrot.jbcrypt.BCrypt
+import com.example.sokoban.db.models.Settings
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
@@ -104,10 +106,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     //Version control: upgrading tables
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL(sqlDeleteUsersTable) // Deleting the old users table
+
         //other delete old versions here...
         db.execSQL(sqlDeleteLevelsTable)
         db.execSQL(sqlDeleteSettingsTable)
         db.execSQL(sqlDeleteHighScoresTable)
+
 
         onCreate(db) // Recreating all tables
     }
@@ -122,21 +126,26 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         getType(columnIndex) == Cursor.FIELD_TYPE_NULL
 
 
-
     /*deletes databases but does not reset auto-increments,
     if you want to delete auto-increments, drop tables and recreate them and do it inside this function*/
     fun resetDatabase() {
         val db = this.writableDatabase
         db.beginTransaction()
         try {
-            //Delete rows
-            db.delete("Users", null, null)
-            db.delete("Levels", null, null)
-            db.delete("HighScores", null, null)
-            db.delete("Settings", null, null)
+            //Clear all data
+            db.delete(UserContract.UserEntry.TABLE_NAME, null, null)
+            db.delete(LevelContract.LevelEntry.TABLE_NAME, null, null)
+            db.delete(HighScoreContract.HighScoreEntry.TABLE_NAME, null, null)
+            db.delete(SettingsContract.SettingsEntry.TABLE_NAME, null, null)
+
+            //Resetting auto-increment counters
+            db.execSQL("DELETE FROM sqlite_sequence WHERE name='${UserContract.UserEntry.TABLE_NAME}'")
+            db.execSQL("DELETE FROM sqlite_sequence WHERE name='${LevelContract.LevelEntry.TABLE_NAME}'")
+            db.execSQL("DELETE FROM sqlite_sequence WHERE name='${HighScoreContract.HighScoreEntry.TABLE_NAME}'")
+            db.execSQL("DELETE FROM sqlite_sequence WHERE name='${SettingsContract.SettingsEntry.TABLE_NAME}'")
 
             db.setTransactionSuccessful() //Commit if all succeeded
-            Log.d(TAG, "Database reset: Data cleared")
+            Log.d(TAG, "Database reset: Data cleared... ...auto-increment succeeded.")
         } catch (e: Exception) {
             Log.e(TAG, "Error resetting database: ", e)
         } finally {
@@ -144,6 +153,83 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             db.close()
         }
     }
+
+    //Login and Registration handling
+
+    // Check if the user exists by username or email
+    fun checkUser(username: String?, email: String?): Boolean {
+        val db = this.readableDatabase
+        val selectionArgs = mutableListOf<String>()
+        val conditions = mutableListOf<String>()
+
+        // If username is provided
+        if (!username.isNullOrEmpty()) {
+            conditions.add("${UserContract.UserEntry.COLUMN_USERNAME} = ?")
+            selectionArgs.add(username)
+        }
+
+        // If email is provided
+        if (!email.isNullOrEmpty()) {
+            conditions.add("${UserContract.UserEntry.COLUMN_EMAIL} = ?")
+            selectionArgs.add(email)
+        }
+
+        // Combine conditions with OR if both username and email are provided
+        val selection = conditions.joinToString(" OR ")
+
+        val cursor: Cursor = db.query(
+            UserContract.UserEntry.TABLE_NAME,
+            null,
+            selection,
+            selectionArgs.toTypedArray(),
+            null,
+            null,
+            null
+        )
+        val exists = cursor.count > 0
+        cursor.close()
+        db.close()
+        return exists
+    }
+
+    // Check user credentials during login (username or email + password)
+        fun checkUserCredentials(usernameOrEmail: String, password: String): Boolean {
+            val db = this.readableDatabase
+            val cursor: Cursor = db.query(
+                UserContract.UserEntry.TABLE_NAME,
+                null,
+                "${UserContract.UserEntry.COLUMN_USERNAME} = ? OR ${UserContract.UserEntry.COLUMN_EMAIL} = ?",
+                arrayOf(usernameOrEmail, usernameOrEmail),
+                null,
+                null,
+                null
+            )
+
+        if (cursor.moveToFirst()) {
+            // Get the index
+            val columnIndex = cursor.getColumnIndex(UserContract.UserEntry.COLUMN_PASSWORD_HASH)
+
+            // Check if the column index is valid
+            if (columnIndex != -1) {
+                // Retrieve the stored hashed password from the cursor
+                val storedPasswordHash = cursor.getString(columnIndex)
+
+                // Comparing hashed pw with entered pw
+                cursor.close()
+                db.close()
+                return BCrypt.checkpw(password, storedPasswordHash)
+            } else {
+                // Handling the case of no column
+                cursor.close()
+                db.close()
+                return false
+            }
+        } else {
+            cursor.close()
+            db.close()
+            return false
+        }
+}
 
     fun getUserScore(userId: Long): Int? {
         val db = this.readableDatabase
