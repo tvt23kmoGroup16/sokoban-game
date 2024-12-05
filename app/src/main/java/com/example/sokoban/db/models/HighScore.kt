@@ -1,4 +1,4 @@
-package com.example.sqlite_playground.db.models
+package com.example.sokoban.db.models
 
 data class HighScore(
     val id: Long,

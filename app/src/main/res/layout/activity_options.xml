@@ -15,6 +15,7 @@
         android:layout_marginBottom="24dp"
         android:textStyle="bold"/>
 
+    <!-- Master Volume Section -->
     <TextView
         android:id="@+id/tv_master_volume"
         android:layout_width="wrap_content"
@@ -27,6 +28,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp" />
+
+    <!-- Music Volume Section -->
+    <CheckBox
+        android:id="@+id/checkbox_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Music"
+        android:layout_marginBottom="8dp"
+        android:checked="true" />
 
     <TextView
         android:id="@+id/tv_music_volume"
@@ -41,6 +51,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp" />
 
+    <!-- Sound Effects Volume Section -->
+    <CheckBox
+        android:id="@+id/checkbox_sound_effects"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sound Effects"
+        android:layout_marginBottom="8dp"
+        android:checked="true" />
+
     <TextView
         android:id="@+id/tv_sound_effects_volume"
         android:layout_width="wrap_content"
@@ -54,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp" />
 
+    <!-- Save Button -->
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"

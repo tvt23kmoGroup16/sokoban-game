@@ -86,6 +86,46 @@ class GameMap(
         )
     )
 
+    val themes = mapOf(
+        1 to Theme(
+            wallAsset = "walls/jungle.png",
+            playerAsset = "characters/player.png", //<-- Switch correct image
+            boxAsset = "boxes/jungleBoulder.png",
+            goalAsset = "goals/jungleTarget.png",
+            floorAsset = "flooring/jungleTile.png"
+        ),
+        2 to Theme(
+            wallAsset = "walls/scifiWall.png",
+            playerAsset = "characters/alien-monster.png",
+            boxAsset = "boxes/jungleBoulder.png", //<-- Switch correct image
+            goalAsset = "goals/scifiTarget.png",
+            floorAsset = "flooring/scifiTile.png"
+        ),
+        3 to Theme(
+            wallAsset = "walls/fantasyWall.png",
+            playerAsset = "characters/alien-monster.png",
+            boxAsset = "boxes/pot_of_gold.png",
+            goalAsset = "goals/fantasyTarget.png",
+            floorAsset = "flooring/fantasyTile.png"
+        ),
+        4 to Theme(
+            wallAsset = "walls/ancientWall.png",
+            playerAsset = "characters/alien-monster.png", //<-- Switch correct image
+            boxAsset = "boxes/jungleBoulder.png", //<-- Switch correct image
+            goalAsset = "goals/ancientTarget.png",
+            floorAsset = "flooring/ancientTile.png"
+        ),
+        5 to Theme(
+            wallAsset = "walls/westernWall.png",
+            playerAsset = "characters/alien-monster.png", //<-- Switch correct image
+            boxAsset = "boxes/jungleBoulder.png", //<-- Switch correct image
+            goalAsset = "goals/westernTarget.png",
+            floorAsset = "flooring/westernTile.png"
+        )
+    )
+
+    private val theme: Theme = themes[level] ?: throw IllegalArgumentException("Theme not found for level $level")
+
     // Select the map based on the level
     var map: Array<CharArray> = mapLevels[level - 1] // Get the map based on the selected level
 
@@ -123,11 +163,11 @@ class GameMap(
                 val imageView = ImageView(gridGameMap.context)
 
                 val bitmap = when (cell) {
-                    '#' -> loadAssetImage("walls/jungle.png")  // Wall
-                    'P' -> loadAssetImage("characters/player.png")  // Player
-                    'B' -> loadAssetImage("boxes/jungleBoulder.png")  // Box
-                    'X' -> loadAssetImage("goals/ladybug.png")  // Goal
-                    ' ' -> loadAssetImage("flooring/jungleTile.png") //Floor
+                    '#' -> loadAssetImage(theme.wallAsset)  // Wall
+                    'P' -> loadAssetImage(theme.playerAsset)  // Player
+                    'B' -> loadAssetImage(theme.boxAsset)  // Box
+                    'X' -> loadAssetImage(theme.goalAsset)  // Goal
+                    ' ' -> loadAssetImage(theme.floorAsset) //Floor
                     else -> null  // Empty space (nothing displayed)
                 }
 
@@ -140,8 +180,8 @@ class GameMap(
 
                 // Adjust image size to fit grid cell
                 val params = GridLayout.LayoutParams()
-                params.width = cellSize  // Set width to calculated cell size
-                params.height = cellSize  // Set height to calculated cell size
+                params.width = (cellSize - 5) // Set width to calculated cell size
+                params.height = (cellSize -5)  // Set height to calculated cell size
                 imageView.layoutParams = params
 
                 // Add the ImageView to the grid layout
@@ -158,4 +198,12 @@ class GameMap(
             null // Return null if the file is not found or any error occurs
         }
     }
+
+    data class Theme(
+        val wallAsset: String,
+        val playerAsset: String,
+        val boxAsset: String,
+        val goalAsset: String,
+        val floorAsset: String
+    )
 }

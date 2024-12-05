@@ -1,9 +1,9 @@
-package com.example.sqlite_playground.db.repositories
+package com.example.sokoban.db.repositories
 
 import android.content.ContentValues
-import com.example.sqlite_playground.db.DatabaseHelper
-import com.example.sqlite_playground.db.contracts.UserContract
-import com.example.sqlite_playground.db.models.User
+import com.example.sokoban.db.DatabaseHelper
+import com.example.sokoban.db.contracts.UserContract
+import com.example.sokoban.db.models.User
 
 class UserRepository(private val dbHelper: DatabaseHelper) {
 

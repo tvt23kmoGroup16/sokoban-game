@@ -1,13 +1,13 @@
-package com.example.sqlite_playground.db
+package com.example.sokoban.db
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.sqlite_playground.db.contracts.UserContract
-import com.example.sqlite_playground.db.contracts.LevelContract
-import com.example.sqlite_playground.db.contracts.SettingsContract
-import com.example.sqlite_playground.db.contracts.HighScoreContract
+import com.example.sokoban.db.contracts.UserContract
+import com.example.sokoban.db.contracts.LevelContract
+import com.example.sokoban.db.contracts.SettingsContract
+import com.example.sokoban.db.contracts.HighScoreContract
 import android.database.Cursor
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -43,8 +43,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 "${SettingsContract.SettingsEntry.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "${SettingsContract.SettingsEntry.COLUMN_USER_ID} INTEGER NOT NULL," +
                 "${SettingsContract.SettingsEntry.COLUMN_MUSIC_ENABLED} INTEGER NOT NULL," +
+                "${SettingsContract.SettingsEntry.COLUMN_SOUND_ENABLED} INTEGER NOT NULL," +
+                "${SettingsContract.SettingsEntry.COLUMN_MASTER_VOLUME} INTEGER NOT NULL," +
+                "${SettingsContract.SettingsEntry.COLUMN_MUSIC_VOLUME} INTEGER NOT NULL," +
+                "${SettingsContract.SettingsEntry.COLUMN_SOUND_VOLUME} INTEGER NOT NULL," +
                 "FOREIGN KEY (${SettingsContract.SettingsEntry.COLUMN_USER_ID}) " +
                 "REFERENCES ${UserContract.UserEntry.TABLE_NAME} (${UserContract.UserEntry.COLUMN_ID}))"
+
 
     private val sqlCreateHighScoresTable =
         "CREATE TABLE ${HighScoreContract.HighScoreEntry.TABLE_NAME} (" +
