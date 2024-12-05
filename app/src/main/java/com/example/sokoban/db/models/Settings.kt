@@ -1,8 +1,12 @@
-package com.example.sqlite_playground.db.models
+package com.example.sokoban.db.models
 
 data class Settings(
     val id: Long,
     val userId: Long,
-    val musicEnabled: Boolean
+    val musicEnabled: Boolean,
+    val soundEnabled: Boolean,
+    val masterVolume: Int,
+    val musicVolume: Int,
+    val soundVolume: Int
 )
 

@@ -33,7 +33,7 @@
     <!-- Movement Keys -->
     <GridLayout
         android:layout_width="wrap_content"
-        android:layout_height="240dp"
+        android:layout_height="262dp"
         android:layout_gravity="center"
         android:layout_marginBottom="0dp"
         android:columnCount="3"

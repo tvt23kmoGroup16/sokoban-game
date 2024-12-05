@@ -1,4 +1,4 @@
-package com.example.sqlite_playground.db.contracts
+package com.example.sokoban.db.contracts
 
 import android.provider.BaseColumns
 
