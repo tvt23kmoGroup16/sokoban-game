@@ -1,6 +1,7 @@
 package com.example.sokoban
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -8,6 +9,8 @@ import android.widget.GridLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sokoban.db.DatabaseHelper
+import com.example.sokoban.db.repositories.SettingsRepository
 
 class GameActivity : AppCompatActivity() {
 
@@ -93,6 +96,26 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun showWinDialog(moveCount: Int) {
+        val dbHelper = DatabaseHelper(this)
+        val settingsRepository = SettingsRepository(dbHelper)
+
+        // Retrieve saved settings
+        val settings = settingsRepository.getSettings(1L) // Replace 1L with actual user ID
+        if (settings != null && settings.soundEnabled) {
+            val masterVolume = settings.masterVolume / 100.0f
+            val soundVolume = settings.soundVolume / 100.0f
+            val effectiveVolume = masterVolume * soundVolume
+
+            // Play victory sound
+            val mediaPlayer = MediaPlayer.create(this, R.raw.win)
+            mediaPlayer.setVolume(effectiveVolume, effectiveVolume) // Apply effective volume
+            mediaPlayer.start()
+            mediaPlayer.setOnCompletionListener {
+                mediaPlayer.release() // Release resources
+            }
+        }
+
+        // Show win dialog
         AlertDialog.Builder(this)
             .setTitle("You Win!")
             .setMessage("You completed the level in $moveCount moves.")
@@ -106,6 +129,8 @@ class GameActivity : AppCompatActivity() {
             }
             .show()
     }
+
+
 
     private fun continueGame() {
         // Move to the next level
