@@ -23,12 +23,6 @@ class OptionsActivity : AppCompatActivity() {
         val cbMusic: CheckBox = findViewById(R.id.checkbox_music)
         val cbSound: CheckBox = findViewById(R.id.checkbox_sound_effects)
 
-
-        // Default values
-        seekbarMasterVolume.progress = 50
-        seekbarMusicVolume.progress = 50
-        seekbarSoundEffectsVolume.progress = 50
-
         val dbHelper = DatabaseHelper(this)
         val settingsRepository = SettingsRepository(dbHelper)
 
@@ -43,9 +37,6 @@ class OptionsActivity : AppCompatActivity() {
         }
 
         btnSave.setOnClickListener {
-            val dbHelper = DatabaseHelper(this)
-            val db = dbHelper.writableDatabase
-
             val newSettings = Settings(
                 id = 0L, // This will be auto-generated
                 userId = 1L, //<-- Replace with the actual user ID
@@ -58,6 +49,7 @@ class OptionsActivity : AppCompatActivity() {
 
             settingsRepository.saveSettings(newSettings)
             Toast.makeText(this, "Settings saved!", Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 }
