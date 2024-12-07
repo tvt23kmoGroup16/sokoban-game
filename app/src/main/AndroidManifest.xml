@@ -39,6 +39,18 @@
             android:name=".GameActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>

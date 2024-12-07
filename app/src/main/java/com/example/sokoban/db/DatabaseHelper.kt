@@ -1,5 +1,6 @@
 package com.example.sokoban.db
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -9,8 +10,7 @@ import com.example.sokoban.db.contracts.LevelContract
 import com.example.sokoban.db.contracts.SettingsContract
 import com.example.sokoban.db.contracts.HighScoreContract
 import android.database.Cursor
-import org.mindrot.jbcrypt.BCrypt
-import com.example.sokoban.db.models.Settings
+import at.favre.lib.crypto.bcrypt.BCrypt
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
@@ -155,7 +155,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     //Login and Registration handling
-
     // Check if the user exists by username or email
     fun checkUser(username: String?, email: String?): Boolean {
         val db = this.readableDatabase
@@ -192,44 +191,59 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return exists
     }
 
-    // Check user credentials during login (username or email + password)
-        fun checkUserCredentials(usernameOrEmail: String, password: String): Boolean {
-            val db = this.readableDatabase
-            val cursor: Cursor = db.query(
-                UserContract.UserEntry.TABLE_NAME,
-                null,
-                "${UserContract.UserEntry.COLUMN_USERNAME} = ? OR ${UserContract.UserEntry.COLUMN_EMAIL} = ?",
-                arrayOf(usernameOrEmail, usernameOrEmail),
-                null,
-                null,
-                null
-            )
+    //Checking user credentials during login (username or email + password)
+    fun checkUserCredentials(usernameOrEmail: String, password: String): Boolean {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            UserContract.UserEntry.TABLE_NAME,
+            arrayOf(UserContract.UserEntry.COLUMN_PASSWORD_HASH),
+            "${UserContract.UserEntry.COLUMN_USERNAME} = ? OR ${UserContract.UserEntry.COLUMN_EMAIL} = ?",
+            arrayOf(usernameOrEmail, usernameOrEmail),
+            null, null, null
+        )
 
-        if (cursor.moveToFirst()) {
-            // Get the index
-            val columnIndex = cursor.getColumnIndex(UserContract.UserEntry.COLUMN_PASSWORD_HASH)
-
-            // Check if the column index is valid
-            if (columnIndex != -1) {
-                // Retrieve the stored hashed password from the cursor
-                val storedPasswordHash = cursor.getString(columnIndex)
-
-                // Comparing hashed pw with entered pw
-                cursor.close()
-                db.close()
-                return BCrypt.checkpw(password, storedPasswordHash)
+        return try {
+            if (cursor.moveToFirst()) {
+                val storedPasswordHash = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_PASSWORD_HASH))
+                val result = BCrypt.verifyer().verify(password.toCharArray(), storedPasswordHash)
+                result.verified // true if the password is correct, false if not
             } else {
-                // Handling the case of no column
-                cursor.close()
-                db.close()
-                return false
+                false // user not found
             }
-        } else {
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking user credentials", e)
+            false
+        } finally {
             cursor.close()
             db.close()
-            return false
         }
-}
+    }
+    fun updatePassword(usernameOrEmail: String, hashedPassword: String): Boolean {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(UserContract.UserEntry.COLUMN_PASSWORD_HASH, hashedPassword)
+        }
+
+        val whereClause = "${UserContract.UserEntry.COLUMN_USERNAME} = ? OR ${UserContract.UserEntry.COLUMN_EMAIL} = ?"
+        val whereArgs = arrayOf(usernameOrEmail, usernameOrEmail)
+
+        val rowsUpdated = db.update(UserContract.UserEntry.TABLE_NAME, values, whereClause, whereArgs)
+        return rowsUpdated > 0
+    }
+
+    fun addUser(user: com.example.sokoban.db.models.User): Long {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(UserContract.UserEntry.COLUMN_USERNAME, user.username)
+            put(UserContract.UserEntry.COLUMN_EMAIL, user.email)
+            put(UserContract.UserEntry.COLUMN_PASSWORD_HASH, user.passwordHash)
+            put(UserContract.UserEntry.COLUMN_SCORE, user.score)
+            put(UserContract.UserEntry.COLUMN_LEVEL, user.level)
+            put(UserContract.UserEntry.COLUMN_LAST_LOGIN, user.lastLogin)
+        }
+
+        return db.insert(UserContract.UserEntry.TABLE_NAME, null, values)
+    }
 
     fun getUserScore(userId: Long): Int? {
         val db = this.readableDatabase

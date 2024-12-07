@@ -1,6 +1,7 @@
 package com.example.sokoban.db.repositories
 
 import android.content.ContentValues
+import androidx.core.database.getStringOrNull
 import com.example.sokoban.db.DatabaseHelper
 import com.example.sokoban.db.contracts.UserContract
 import com.example.sokoban.db.models.User
@@ -47,7 +48,7 @@ class UserRepository(private val dbHelper: DatabaseHelper) {
                 username = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_USERNAME)),
                 email = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_EMAIL)),
                 passwordHash = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_PASSWORD_HASH)),
-                lastLogin = cursor.getLong(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LAST_LOGIN)),
+                lastLogin = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LAST_LOGIN)),
                 score = cursor.getInt(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_SCORE)),
                 level = cursor.getInt(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LEVEL))
             )
@@ -78,7 +79,7 @@ class UserRepository(private val dbHelper: DatabaseHelper) {
                 username = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_USERNAME)),
                 email = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_EMAIL)),
                 passwordHash = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_PASSWORD_HASH)),
-                lastLogin = cursor.getLong(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LAST_LOGIN)),
+                lastLogin = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LAST_LOGIN)),
                 score = cursor.getInt(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_SCORE)),
                 level = cursor.getInt(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LEVEL))
             )
@@ -94,7 +95,7 @@ class UserRepository(private val dbHelper: DatabaseHelper) {
         newUsername: String,
         newEmail: String,
         hashedPassword: String,
-        lastLogin: Long
+        lastLogin: String
     ): Int {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -138,7 +139,7 @@ class UserRepository(private val dbHelper: DatabaseHelper) {
                 username = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_USERNAME)),
                 email = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_EMAIL)),
                 passwordHash = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_PASSWORD_HASH)),
-                lastLogin = cursor.getLong(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LAST_LOGIN)),
+                lastLogin = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LAST_LOGIN)),
                 score = cursor.getInt(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_SCORE)),
                 level = cursor.getInt(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LEVEL))
             )
