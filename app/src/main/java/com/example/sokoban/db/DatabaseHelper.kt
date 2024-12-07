@@ -218,6 +218,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             db.close()
         }
     }
+
     fun updatePassword(usernameOrEmail: String, hashedPassword: String): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -328,6 +329,81 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }
         return levelList
     }
+
+    fun getUserById(userId: Long): User? {
+        val db = this.readableDatabase
+        var user: User? = null
+        val query = """
+        SELECT * FROM ${UserContract.UserEntry.TABLE_NAME} 
+        WHERE ${UserContract.UserEntry.COLUMN_ID} = ?
+    """
+        val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+        try {
+            if (cursor.moveToFirst()) {
+                user = User(
+                    id = cursor.getLong(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_ID)),
+                    username = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_USERNAME)),
+                    email = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_EMAIL)),
+                    passwordHash = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_PASSWORD_HASH)),
+                    lastLogin = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LAST_LOGIN)),
+                    score = cursor.getIntOrNull(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_SCORE)),
+                    level = cursor.getLong(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_LEVEL))
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving user by ID: ", e)
+        } finally {
+            cursor.close()
+            db.close()
+        }
+        return user
+    }
+
+    fun getUserIdByUsernameOrEmail(usernameOrEmail: String): Long? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            UserContract.UserEntry.TABLE_NAME,
+            arrayOf(UserContract.UserEntry.COLUMN_ID),  // Make sure this is the correct column
+            "${UserContract.UserEntry.COLUMN_USERNAME} = ? OR ${UserContract.UserEntry.COLUMN_EMAIL} = ?",
+            arrayOf(usernameOrEmail, usernameOrEmail),
+            null, null, null
+        )
+
+        return try {
+            if (cursor.moveToFirst()) {
+                val userId = cursor.getLong(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_ID))
+                userId // Return the user ID
+            } else {
+                null // No user found with that username/email
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving user ID", e)
+            null // Return null if there's an error
+        } finally {
+            cursor.close()
+            db.close()
+        }
+    }
+
+    fun updateUser(userId: Long, newUsername: String, newEmail: String): Boolean {
+        val db = writableDatabase
+        val values = ContentValues()
+        values.put(UserContract.UserEntry.COLUMN_USERNAME, newUsername)
+        values.put(UserContract.UserEntry.COLUMN_EMAIL, newEmail)
+
+        val rowsUpdated = db.update(
+            UserContract.UserEntry.TABLE_NAME,
+            values,
+            "${UserContract.UserEntry.COLUMN_ID} = ?",
+            arrayOf(userId.toString())
+        )
+        db.close()
+        return rowsUpdated > 0
+    }
+
+
+
+
 
 }
 

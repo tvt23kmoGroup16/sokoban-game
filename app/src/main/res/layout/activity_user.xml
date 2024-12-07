@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <!-- Profile Placeholder -->
+    <TextView
+        android:id="@+id/tv_profile_placeholder"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textSize="36sp"
+        android:textColor="@color/white"
+        android:background="@drawable/circle_background"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Current Username Display -->
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"
+        android:text="Username: current_username" /> <!-- Placeholder for current username -->
+
+    <!-- "Enter new username" TextField -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="4dp"
+        android:text="Enter new username below:" />
+
+    <!-- Username EditText for new username -->
+    <EditText
+        android:id="@+id/et_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="New username"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/gray"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:padding="12dp"
+        android:layout_gravity="center" />
+
+    <!-- Current Email Display -->
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"
+        android:text="Email: current_email@example.com" /> <!-- Placeholder for current email -->
+
+    <!-- "Enter new email" TextField -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="4dp"
+        android:text="Enter new email address below:" />
+
+    <!-- Email EditText for new email -->
+    <EditText
+        android:id="@+id/et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="New email address"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/gray"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:layout_gravity="center" />
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Changes"
+        android:textSize="16sp"
+        android:textColor="@color/white" />
+
+    <!-- Reset Password Button -->
+    <Button
+        android:id="@+id/btn_reset_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reset Password"
+        android:textSize="16sp"
+        android:textColor="@color/white" />
+</LinearLayout>
