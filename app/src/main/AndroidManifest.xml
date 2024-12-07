@@ -51,6 +51,10 @@
             android:name=".RegisterActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".UserActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>
