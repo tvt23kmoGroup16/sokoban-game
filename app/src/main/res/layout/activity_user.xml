@@ -27,7 +27,7 @@
         android:textSize="18sp"
         android:textColor="@color/black"
         android:layout_marginBottom="8dp"
-        android:text="Username: current_username" /> <!-- Placeholder for current username -->
+        android:text="Username: current_username" />
 
     <!-- "Enter new username" TextField -->
     <TextView
@@ -59,7 +59,7 @@
         android:textSize="18sp"
         android:textColor="@color/black"
         android:layout_marginBottom="8dp"
-        android:text="Email: current_email@example.com" /> <!-- Placeholder for current email -->
+        android:text="Email: current_email@example.com" />
 
     <!-- "Enter new email" TextField -->
     <TextView
@@ -100,4 +100,61 @@
         android:text="Reset Password"
         android:textSize="16sp"
         android:textColor="@color/white" />
+
+    <!-- All Time Stats Section -->
+    <TextView
+        android:id="@+id/tv_all_time_stats_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="All Time Stats"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/stats_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:elevation="4dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@color/gray">
+
+            <TextView
+                android:id="@+id/tv_levels_completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Levels Completed: 0"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_total_moves"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Moves: 0"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Time: 0 seconds"
+                android:textSize="18sp"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>

@@ -103,7 +103,7 @@ class GameMap(
         ),
         3 to Theme(
             wallAsset = "walls/fantasyWall.png",
-            playerAsset = "characters/alien-monster.png",
+            playerAsset = "characters/gnome.png",
             boxAsset = "boxes/pot_of_gold.png",
             goalAsset = "goals/fantasyTarget.png",
             floorAsset = "flooring/fantasyTile.png"

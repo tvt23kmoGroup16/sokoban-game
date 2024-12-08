@@ -24,7 +24,7 @@ class CharacterActivity : AppCompatActivity() {
             "characters/character2.png",
             "characters/player.png"
         )
-        characterNames = arrayOf("Character 1", "Character 2", "Lego Indy")
+        characterNames = arrayOf("Alien", "Gnome", "Lego Indy")
 
         val imgCharacter: ImageView = findViewById(R.id.img_character)
         val tvCharacterName: TextView = findViewById(R.id.tv_character_name)

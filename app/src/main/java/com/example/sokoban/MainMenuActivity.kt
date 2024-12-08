@@ -28,6 +28,7 @@ class MainMenuActivity : AppCompatActivity() {
         val btnOptions: Button = findViewById(R.id.btn_options)
         val btnChooseCharacter: Button = findViewById(R.id.btn_choose_character)
         val tvProfileCircle: TextView = findViewById(R.id.tv_profile_circle)
+        val btnLeaderboard: Button = findViewById(R.id.btn_leaderboard)
 
         initMusic()
 
@@ -66,6 +67,11 @@ class MainMenuActivity : AppCompatActivity() {
         tvProfileCircle.setOnClickListener {
             //Navigate to UserActivity
             startActivity(Intent(this, UserActivity::class.java))
+        }
+
+        btnLeaderboard.setOnClickListener {
+            //Navigate to LeaderboardActivity
+            startActivity(Intent(this, LeaderboardActivity::class.java))
         }
     }
 

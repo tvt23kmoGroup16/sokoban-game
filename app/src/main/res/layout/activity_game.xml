@@ -18,17 +18,34 @@
         android:columnCount="12"
         android:rowCount="12" />
 
-    <!-- Game Status -->
-    <TextView
-        android:id="@+id/tv_game_status"
+    <!-- Game Status and Timer -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Moves: 0"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:layout_marginBottom="8dp">
+
+        <!-- Moves Counter -->
+        <TextView
+            android:id="@+id/tv_game_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Moves: 0"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:layout_marginEnd="16dp" />
+
+        <!-- Timer -->
+        <TextView
+            android:id="@+id/tv_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <!-- Movement Keys -->
     <GridLayout
@@ -120,6 +137,5 @@
             android:backgroundTint="@android:color/holo_orange_light"
             android:text="Undo"
             android:textSize="16sp" />
-
     </GridLayout>
 </LinearLayout>
