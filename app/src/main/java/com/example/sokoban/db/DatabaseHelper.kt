@@ -15,7 +15,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         const val DATABASE_NAME = "UserDatabase.db"
-        const val DATABASE_VERSION = 1 //version control
+        const val DATABASE_VERSION = 2 //version control
         const val TAG = "DatabaseHelper"
     }
 
@@ -57,11 +57,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         "CREATE TABLE ${HighScoreContract.HighScoreEntry.TABLE_NAME} (" +
                 "${HighScoreContract.HighScoreEntry.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "${HighScoreContract.HighScoreEntry.COLUMN_USER_ID} INTEGER NOT NULL," +
-                "${HighScoreContract.HighScoreEntry.COLUMN_SCORE} INTEGER NOT NULL," +
                 "${HighScoreContract.HighScoreEntry.COLUMN_LEVEL} INTEGER NOT NULL," +
+                "${HighScoreContract.HighScoreEntry.COLUMN_TIME} INTEGER NOT NULL," +
+                "${HighScoreContract.HighScoreEntry.COLUMN_MOVES} INTEGER NOT NULL," +
                 "${HighScoreContract.HighScoreEntry.COLUMN_DATE} DATETIME NOT NULL," +
                 "FOREIGN KEY (${HighScoreContract.HighScoreEntry.COLUMN_USER_ID}) " +
                 "REFERENCES ${UserContract.UserEntry.TABLE_NAME} (${UserContract.UserEntry.COLUMN_ID}))"
+
 
 
     // Deleting the users table
@@ -105,6 +107,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     //Version control: upgrading tables
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+            if (oldVersion < 2) { // Assuming version 2 introduces the new columns
+                db.execSQL("ALTER TABLE ${HighScoreContract.HighScoreEntry.TABLE_NAME} ADD COLUMN ${HighScoreContract.HighScoreEntry.COLUMN_TIME} INTEGER NOT NULL DEFAULT 0;")
+                db.execSQL("ALTER TABLE ${HighScoreContract.HighScoreEntry.TABLE_NAME} ADD COLUMN ${HighScoreContract.HighScoreEntry.COLUMN_MOVES} INTEGER NOT NULL DEFAULT 0;")
+            }
+
         db.execSQL(sqlDeleteUsersTable) // Deleting the old users table
 
         //other delete old versions here...
@@ -246,7 +253,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.insert(UserContract.UserEntry.TABLE_NAME, null, values)
     }
 
-    fun getUserScore(userId: Long): Int? {
+/*    fun getUserScore(userId: Long): Int? {
         val db = this.readableDatabase
         var highScore: Int? = null
         val query =
@@ -267,7 +274,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             db.close()
         }
         return highScore //Return high score if found, else return null
-    }
+    }*/
 
     fun getUsersByLevel(levelId: Long): List<User> {
         val db = this.readableDatabase
@@ -401,9 +408,126 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return rowsUpdated > 0
     }
 
+    fun addHighScore(userId: Long, level: Int, time: Int, moves: Int, date: String): Long {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(HighScoreContract.HighScoreEntry.COLUMN_USER_ID, userId)
+            put(HighScoreContract.HighScoreEntry.COLUMN_LEVEL, level)
+            put(HighScoreContract.HighScoreEntry.COLUMN_TIME, time)
+            put(HighScoreContract.HighScoreEntry.COLUMN_MOVES, moves)
+            put(HighScoreContract.HighScoreEntry.COLUMN_DATE, date)
+        }
+
+        val rowId = db.insert(HighScoreContract.HighScoreEntry.TABLE_NAME, null, values)
+        db.close()
+        return rowId
+    }
+
+    fun getBestHighScore(userId: Long, level: Int): Pair<Int, Int>? {
+        val db = this.readableDatabase
+        var bestTime: Int? = null
+        var bestMoves: Int? = null
+        val query = """
+        SELECT ${HighScoreContract.HighScoreEntry.COLUMN_TIME}, ${HighScoreContract.HighScoreEntry.COLUMN_MOVES} 
+        FROM ${HighScoreContract.HighScoreEntry.TABLE_NAME} 
+        WHERE ${HighScoreContract.HighScoreEntry.COLUMN_USER_ID} = ? AND ${HighScoreContract.HighScoreEntry.COLUMN_LEVEL} = ?
+        ORDER BY ${HighScoreContract.HighScoreEntry.COLUMN_TIME} ASC, ${HighScoreContract.HighScoreEntry.COLUMN_MOVES} ASC
+        LIMIT 1
+    """
+        val cursor = db.rawQuery(query, arrayOf(userId.toString(), level.toString()))
+        try {
+            if (cursor.moveToFirst()) {
+                bestTime = cursor.getInt(cursor.getColumnIndexOrThrow(HighScoreContract.HighScoreEntry.COLUMN_TIME))
+                bestMoves = cursor.getInt(cursor.getColumnIndexOrThrow(HighScoreContract.HighScoreEntry.COLUMN_MOVES))
+            }
+        } finally {
+            cursor.close()
+            db.close()
+        }
+        return if (bestTime != null && bestMoves != null) Pair(bestTime, bestMoves) else null
+    }
+
+    fun getLeaderboard(): List<String> {
+        val db = this.readableDatabase
+        val leaderboard = mutableListOf<String>()
+
+        val query = """
+        SELECT u.${UserContract.UserEntry.COLUMN_USERNAME}, hs.${HighScoreContract.HighScoreEntry.COLUMN_LEVEL}, 
+            MIN(hs.${HighScoreContract.HighScoreEntry.COLUMN_TIME}) AS best_time, 
+            MIN(hs.${HighScoreContract.HighScoreEntry.COLUMN_MOVES}) AS best_moves, 
+            hs.${HighScoreContract.HighScoreEntry.COLUMN_DATE}
+        FROM ${HighScoreContract.HighScoreEntry.TABLE_NAME} AS hs
+        JOIN ${UserContract.UserEntry.TABLE_NAME} AS u 
+        ON hs.${HighScoreContract.HighScoreEntry.COLUMN_USER_ID} = u.${UserContract.UserEntry.COLUMN_ID}
+        GROUP BY hs.${HighScoreContract.HighScoreEntry.COLUMN_LEVEL}, hs.${HighScoreContract.HighScoreEntry.COLUMN_USER_ID}
+        ORDER BY hs.${HighScoreContract.HighScoreEntry.COLUMN_LEVEL} ASC, best_time ASC, best_moves ASC
+    """
+
+        val cursor = db.rawQuery(query, null)
+
+        try {
+            while (cursor.moveToNext()) {
+                val username = cursor.getString(cursor.getColumnIndexOrThrow(UserContract.UserEntry.COLUMN_USERNAME))
+                val level = cursor.getInt(cursor.getColumnIndexOrThrow(HighScoreContract.HighScoreEntry.COLUMN_LEVEL))
+                val bestTime = cursor.getInt(cursor.getColumnIndexOrThrow("best_time"))
+                val bestMoves = cursor.getInt(cursor.getColumnIndexOrThrow("best_moves"))
+                val date = cursor.getString(cursor.getColumnIndexOrThrow(HighScoreContract.HighScoreEntry.COLUMN_DATE))
+
+                leaderboard.add("User: $username, Level: $level, Time: $bestTime, Moves: $bestMoves, Date: $date")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving leaderboard: ", e)
+        } finally {
+            cursor.close()
+            db.close()
+        }
+
+        return leaderboard
+    }
+
+    fun getUserStats(userId: Long): UserStats {
+        val db = this.readableDatabase
+        var levelsCompleted = 0
+        var totalMoves = 0
+        var totalTime = 0
+
+        val query = """
+        SELECT 
+            COUNT(hs.${HighScoreContract.HighScoreEntry.COLUMN_LEVEL}) AS levels_completed, 
+            SUM(hs.${HighScoreContract.HighScoreEntry.COLUMN_MOVES}) AS total_moves, 
+            SUM(hs.${HighScoreContract.HighScoreEntry.COLUMN_TIME}) AS total_time
+        FROM ${HighScoreContract.HighScoreEntry.TABLE_NAME} AS hs
+        WHERE hs.${HighScoreContract.HighScoreEntry.COLUMN_USER_ID} = ?
+    """
+
+        val cursor = db.rawQuery(query, arrayOf(userId.toString()))
+
+        try {
+            if (cursor.moveToFirst()) {
+                levelsCompleted = cursor.getInt(cursor.getColumnIndexOrThrow("levels_completed"))
+                totalMoves = cursor.getInt(cursor.getColumnIndexOrThrow("total_moves"))
+                totalTime = cursor.getInt(cursor.getColumnIndexOrThrow("total_time"))
+
+                // Log the results to see if the query works
+                Log.d(TAG, "UserStats for userId $userId: Levels Completed = $levelsCompleted, Total Moves = $totalMoves, Total Time = $totalTime")
+            } else {
+                // Log if no data is found for the user
+                Log.d(TAG, "No stats found for userId $userId")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error retrieving user stats: ", e)
+        } finally {
+            cursor.close()
+            db.close()
+        }
+
+        return UserStats(levelsCompleted, totalMoves, totalTime)
+    }
 
 
 
+    // UserStats data class to hold the statistics
+    data class UserStats(val levelsCompleted: Int, val totalMoves: Int, val totalTime: Int)
 
 }
 

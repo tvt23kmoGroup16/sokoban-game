@@ -1,12 +1,15 @@
 package com.example.sokoban
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sokoban.db.DatabaseHelper
@@ -20,6 +23,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var btnLeft: Button
     private lateinit var btnRight: Button
     private lateinit var tvGameStatus: TextView // Game status TextView
+    private lateinit var tvTimer: TextView // Timer TextView
     private lateinit var gameMap: GameMap
     private lateinit var playerMovement: PlayerMovement
     private lateinit var swipeScreen: SwipeScreen
@@ -28,9 +32,40 @@ class GameActivity : AppCompatActivity() {
 
     private var level = 1 // Track the current level
 
+    // Timer variables
+    private var startTime: Long = 0L
+    private var elapsedTime: Long = 0L
+    private var timerRunning = false
+    private val timerHandler = Handler()
+
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private var userId: Long = -1L // Default value indicating no user logged in
+
+
+    private val timerRunnable = object : Runnable {
+        override fun run() {
+            val currentTime = System.currentTimeMillis()
+            elapsedTime = currentTime - startTime
+            val seconds = (elapsedTime / 1000).toInt() % 60
+            val minutes = (elapsedTime / (1000 * 60)).toInt()
+            tvTimer.text = String.format("%02d:%02d", minutes, seconds)
+            timerHandler.postDelayed(this, 1000) // Update every second
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
+        userId = sharedPreferences.getLong("userId", -1L)
+
+        if (userId == -1L) {
+            Toast.makeText(this, "No user logged in!", Toast.LENGTH_SHORT).show()
+            finish() // Exit activity if no user is logged in
+            return
+        }
 
         level = intent.getIntExtra("level", 1)
 
@@ -41,6 +76,7 @@ class GameActivity : AppCompatActivity() {
         btnLeft = findViewById(R.id.btn_left)
         btnRight = findViewById(R.id.btn_right)
         tvGameStatus = findViewById(R.id.tv_game_status)
+        tvTimer = findViewById(R.id.tv_timer)
         btnRestart = findViewById(R.id.btn_restart)
         btnUndo = findViewById(R.id.btn_undo)
 
@@ -72,6 +108,11 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun movePlayerAndUpdate(dx: Int, dy: Int) {
+        if (!timerRunning) {
+            startTime = System.currentTimeMillis()
+            timerRunning = true
+            timerHandler.post(timerRunnable)
+        }
         playerMovement.movePlayer(dx, dy)
         updateGameStatus()
     }
@@ -81,14 +122,17 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun restartGame() {
-        // Reset to the current level
+        if (timerRunning) {
+            timerHandler.removeCallbacks(timerRunnable)
+            timerRunning = false
+        }
+        elapsedTime = 0L
+        tvTimer.text = "00:00" // Reset timer display
         gameMap = GameMap(gridGameMap, assets, level)  // Reset game map
         playerMovement = PlayerMovement(this, gameMap, tvGameStatus)  // Reinitialize player movement
         gameMap.renderMap()  // Render the map again
         updateGameStatus()  // Update the status view
     }
-
-
 
     private fun undoMove() {
         playerMovement.undoMove()
@@ -96,11 +140,16 @@ class GameActivity : AppCompatActivity() {
     }
 
     fun showWinDialog(moveCount: Int) {
+        if (timerRunning) {
+            timerHandler.removeCallbacks(timerRunnable)
+            timerRunning = false
+        }
+
         val dbHelper = DatabaseHelper(this)
         val settingsRepository = SettingsRepository(dbHelper)
 
-        // Retrieve saved settings
-        val settings = settingsRepository.getSettings(1L) // Replace 1L with actual user ID
+        // Retrieve saved settings for the current user
+        val settings = settingsRepository.getSettings(userId)
         if (settings != null && settings.soundEnabled) {
             val masterVolume = settings.masterVolume / 100.0f
             val soundVolume = settings.soundVolume / 100.0f
@@ -115,10 +164,29 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+        // Calculate total time in seconds
+        val totalTimeInSeconds = (elapsedTime / 1000).toInt()
+
+        // Get the current date as a string
+        val currentDate = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
+
+        // Add high score to the database
+        val highScoreId = dbHelper.addHighScore(userId, level, totalTimeInSeconds, moveCount, currentDate)
+        if (highScoreId != -1L) {
+            Toast.makeText(this, "High score added!", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Failed to add high score!", Toast.LENGTH_SHORT).show()
+        }
+
+        val sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("highest_level", level)  // Save the highest level the user completed
+        editor.apply()
+
         // Show win dialog
         AlertDialog.Builder(this)
             .setTitle("You Win!")
-            .setMessage("You completed the level in $moveCount moves.")
+            .setMessage("You completed the level in $moveCount moves and ${tvTimer.text} time.")
             .setPositiveButton("Continue") { dialog, _ ->
                 dialog.dismiss()
                 continueGame()    // Move to the next level
@@ -129,6 +197,7 @@ class GameActivity : AppCompatActivity() {
             }
             .show()
     }
+
 
 
 
@@ -147,6 +216,4 @@ class GameActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
-
 }

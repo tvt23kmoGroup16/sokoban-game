@@ -19,6 +19,9 @@ class UserActivity : AppCompatActivity() {
     private lateinit var tvProfilePlaceholder: TextView
     private lateinit var tvUsername: TextView
     private lateinit var tvEmail: TextView
+    private lateinit var tvLevelsCompleted: TextView
+    private lateinit var tvTotalMoves: TextView
+    private lateinit var tvTotalTime: TextView
     private lateinit var etUsername: EditText
     private lateinit var etEmail: EditText
     private lateinit var btnSave: Button
@@ -35,6 +38,9 @@ class UserActivity : AppCompatActivity() {
         tvProfilePlaceholder = findViewById(R.id.tv_profile_placeholder)
         tvUsername = findViewById(R.id.tv_username)
         tvEmail = findViewById(R.id.tv_email)
+        tvLevelsCompleted = findViewById(R.id.tv_levels_completed)
+        tvTotalMoves = findViewById(R.id.tv_total_moves)
+        tvTotalTime = findViewById(R.id.tv_total_time)
         etUsername = findViewById(R.id.et_username)
         etEmail = findViewById(R.id.et_email)
         btnSave = findViewById(R.id.btn_save)
@@ -56,6 +62,14 @@ class UserActivity : AppCompatActivity() {
             // Display current username and email
             tvUsername.text = "Username: ${user.username}"
             tvEmail.text = "Email: ${user.email}"
+
+            // Fetch user stats (levels completed, total moves, total time)
+            val userStats = databaseHelper.getUserStats(userId)
+
+            // Display the stats in the TextViews
+            tvLevelsCompleted.text = "Levels Completed: ${userStats.levelsCompleted}"
+            tvTotalMoves.text = "Total Moves: ${userStats.totalMoves}"
+            tvTotalTime.text = "Total Time: ${userStats.totalTime} seconds" // You can format this as you like (e.g., minutes:seconds)
 
             // Set EditTexts with current values
             etUsername.setText(user.username)
@@ -98,6 +112,7 @@ class UserActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
 
     private fun setupProfile(tvProfilePlaceholder: TextView, username: String) {
         val firstLetter = username.firstOrNull()?.uppercase() ?: "?"

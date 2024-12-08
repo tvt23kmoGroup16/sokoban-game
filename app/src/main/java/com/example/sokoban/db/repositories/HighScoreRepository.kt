@@ -6,7 +6,7 @@ import com.example.sokoban.db.contracts.HighScoreContract
 import com.example.sokoban.db.models.HighScore
 
 class HighScoreRepository(private val dbHelper: DatabaseHelper) {
-
+/*
     // Insert a new high score
     fun insertHighScore(userId: Long, score: Int, level: Int, date: String): Long {
         val db = dbHelper.writableDatabase
@@ -57,7 +57,7 @@ class HighScoreRepository(private val dbHelper: DatabaseHelper) {
             "${HighScoreContract.HighScoreEntry.COLUMN_ID} = ?",
             arrayOf(id.toString())
         )
-    }
+    }*/
 
     // Delete a high score entry by ID
     fun deleteHighScore(id: Long): Int {
