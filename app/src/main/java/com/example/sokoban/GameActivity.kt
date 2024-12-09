@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sokoban.db.DatabaseHelper
 import com.example.sokoban.db.repositories.SettingsRepository
-import com.example.sokoban.gameItems.Item
 import com.google.android.gms.games.Player
 
 class GameActivity : AppCompatActivity() {
