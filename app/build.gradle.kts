@@ -59,6 +59,7 @@ dependencies {
     implementation (libs.gson)
     implementation (libs.androidx.room.runtime)
     implementation(libs.androidx.appcompat)
+    implementation(libs.play.services.games.v2)
     annotationProcessor (libs.androidx.room.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

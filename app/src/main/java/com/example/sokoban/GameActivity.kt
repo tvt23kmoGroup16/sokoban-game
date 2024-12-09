@@ -14,6 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sokoban.db.DatabaseHelper
 import com.example.sokoban.db.repositories.SettingsRepository
+import com.example.sokoban.gameItems.Item
+import com.google.android.gms.games.Player
 
 class GameActivity : AppCompatActivity() {
 
@@ -42,6 +44,8 @@ class GameActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private var userId: Long = -1L // Default value indicating no user logged in
 
+    private lateinit var player: Player  // This should be either Alien or Gnome
+    private var currentItem: Item? = null  // The current item the player holds
 
     private val timerRunnable = object : Runnable {
         override fun run() {
@@ -115,6 +119,11 @@ class GameActivity : AppCompatActivity() {
         }
         playerMovement.movePlayer(dx, dy)
         updateGameStatus()
+
+        // Check for game over
+        if (playerMovement.checkForNoMovesLeft()) {
+            showGameOverDialog()
+        }
     }
 
     private fun updateGameStatus() {
@@ -128,6 +137,7 @@ class GameActivity : AppCompatActivity() {
         }
         elapsedTime = 0L
         tvTimer.text = "00:00" // Reset timer display
+
         gameMap = GameMap(gridGameMap, assets, level)  // Reset game map
         playerMovement = PlayerMovement(this, gameMap, tvGameStatus)  // Reinitialize player movement
         gameMap.renderMap()  // Render the map again
@@ -137,6 +147,45 @@ class GameActivity : AppCompatActivity() {
     private fun undoMove() {
         playerMovement.undoMove()
         updateGameStatus()
+    }
+
+    fun showGameOverDialog() {
+        if (timerRunning) {
+            timerHandler.removeCallbacks(timerRunnable)
+            timerRunning = false
+        }
+
+        val dbHelper = DatabaseHelper(this)
+        val settingsRepository = SettingsRepository(dbHelper)
+
+        // Retrieve saved settings for the current user
+        val settings = settingsRepository.getSettings(userId)
+        if (settings != null && settings.soundEnabled) {
+            val masterVolume = settings.masterVolume / 100.0f
+            val soundVolume = settings.soundVolume / 100.0f
+            val effectiveVolume = masterVolume * soundVolume
+
+            // Play game over sound (use a different sound for game over)
+            val mediaPlayer = MediaPlayer.create(this, R.raw.game_over)
+            mediaPlayer.setVolume(effectiveVolume, effectiveVolume) // Apply effective volume
+            mediaPlayer.start()
+            mediaPlayer.setOnCompletionListener {
+                mediaPlayer.release() // Release resources
+            }
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Game Over")
+            .setMessage("No moves left or a critical error occurred.")
+            .setPositiveButton("Retry") { dialog, _ ->
+                dialog.dismiss()
+                restartGame() // Restart the current level
+            }
+            .setNegativeButton("Back") { dialog, _ ->
+                dialog.dismiss()
+                goBackToMainMenu() // Return to the main menu
+            }
+            .show()
     }
 
     fun showWinDialog(moveCount: Int) {
@@ -197,8 +246,6 @@ class GameActivity : AppCompatActivity() {
             }
             .show()
     }
-
-
 
 
     private fun continueGame() {

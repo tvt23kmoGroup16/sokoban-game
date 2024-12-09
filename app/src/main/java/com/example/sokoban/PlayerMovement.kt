@@ -80,6 +80,14 @@ class PlayerMovement(
             return
         }
 
+        // Check if the destination is a hole ('O')
+        if (gameMap.map[newY][newX] == 'O') {
+            Toast.makeText(activity, "Player fell into a hole! Game Over!", Toast.LENGTH_SHORT).show()
+            Log.d("PlayerMovement", "Player fell into a hole at ($newX, $newY).")
+            activity.showGameOverDialog()
+            return
+        }
+
         Log.d("PlayerMovement", "Player moved to: ($playerX, $playerY)")
 
         // Handle box pushing
@@ -90,14 +98,49 @@ class PlayerMovement(
             // Check if the new box position is within bounds
             if (boxNewX in 0 until mapWidth && boxNewY in 0 until mapHeight) {
                 if (gameMap.map[boxNewY][boxNewX] == ' ' || gameMap.map[boxNewY][boxNewX] == 'X') {
-                    // Move the box
-                    gameMap.map[boxNewY][boxNewX] = 'B'
-                    gameMap.map[newY][newX] = 'P'
-                    gameMap.map[playerY][playerX] = ' '
+                    when (gameMap.map[boxNewY][boxNewX]) {
+                        ' ' -> {
+                            // Move the box to an empty space
+                            gameMap.map[boxNewY][boxNewX] = 'B'
+                            gameMap.map[newY][newX] = 'P'
+                            gameMap.map[playerY][playerX] = ' '
 
-                    // Update player position
-                    playerX = newX
-                    playerY = newY
+                            // Update player position
+                            playerX = newX
+                            playerY = newY
+                        }
+
+                        'O' -> {
+                            // Box falls into a hole
+                            gameMap.map[boxNewY][boxNewX] = ' '  // Hole becomes empty
+                            gameMap.map[newY][newX] = 'P'
+                            gameMap.map[playerY][playerX] = ' '
+
+                            // Check for Item
+                            if (!checkForItem()) {
+                                Toast.makeText(
+                                    activity,
+                                    "Box fell into a hole! No special item uses left. Game Over!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Log.d(
+                                    "PlayerMovement",
+                                    "Game Over: No special item found after box fell into hole."
+                                )
+                                activity.showGameOverDialog()
+                                return
+                            }
+
+                            // Update player position
+                            playerX = newX
+                            playerY = newY
+                        }
+
+                        else -> {
+                            Toast.makeText(activity, "Box can't move there!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
 
                     // Increment move count and save game state
                     incrementMoveCount()
@@ -130,6 +173,47 @@ class PlayerMovement(
         if (checkWinCondition()) {
             activity.showWinDialog(moveCount)
         }
+
+        // Check for no moves left
+        if (checkForNoMovesLeft()) {
+            Toast.makeText(activity, "No moves left! Game over!", Toast.LENGTH_SHORT).show()
+            activity.showGameOverDialog()
+        }
+    }
+    fun checkForNoMovesLeft(): Boolean {
+        val directions = listOf(
+            Pair(0, -1),  // Up
+            Pair(0, 1),   // Down
+            Pair(-1, 0),  // Left
+            Pair(1, 0)    // Right
+        )
+        val mapWidth = gameMap.map[0].size
+        val mapHeight = gameMap.map.size
+
+        for ((dx, dy) in directions) {
+            val newX = playerX + dx
+            val newY = playerY + dy
+
+            // Is the move between bounds
+            if (newX in 0 until mapWidth && newY in 0 until mapHeight) {
+                when (gameMap.map[newY][newX]) {
+                    ' ' -> return false  // Open space to move
+                    'B' -> {
+                        val boxNewX = newX + dx
+                        val boxNewY = newY + dy
+
+                        // Is the box pushable
+                        if (boxNewX in 0 until mapWidth && boxNewY in 0 until mapHeight &&
+                            (gameMap.map[boxNewY][boxNewX] == ' ' || gameMap.map[boxNewY][boxNewX] == 'X')
+                        ) {
+                            return false  // Can be pushed
+                        }
+                    }
+                }
+            }
+        }
+        // No valid moves left
+        return true
     }
 
     private fun incrementMoveCount() {

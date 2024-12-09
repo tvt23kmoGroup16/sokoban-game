@@ -24,7 +24,7 @@ class GameMap(
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', '#', '#', '#', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', ' ', '0', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', 'X', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
         ),
@@ -35,23 +35,23 @@ class GameMap(
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', ' ', 'B', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', 'P', '#', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', '#', '#', '#', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', '#', '#', '#', ' ', '0', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', 'X', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
         ),
         arrayOf( //Level 3
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', ' ', '#', '#', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', '0', ' ', '#'),
             charArrayOf('#', ' ', ' ', 'X', ' ', '#', '#', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', '#', ' ', 'B', '#', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', '#', ' ', 'B', '#', ' ', ' ', ' ', '0', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', '#', ' ', 'P', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
@@ -62,26 +62,40 @@ class GameMap(
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', 'B', ' ', '#', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', ' ', 'B', ' ', '#', ' ', ' ', '0', '#'),
             charArrayOf('#', ' ', ' ', ' ', '#', '#', '#', '#', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', '#', '#', ' ', '#', '#'),
-            charArrayOf('#', ' ', ' ', ' ', 'P', ' ', ' ', '#', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', '0', 'P', ' ', ' ', '#', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', '#', 'X', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
         ),
         arrayOf( //Level 5
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', '#', ' ', '#', '#', '#', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', 'X', '#', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', '#', '#', '#', '#', '#', ' ', '#', '#'),
-            charArrayOf('#', ' ', ' ', ' ', '#', ' ', ' ', ' ', 'B', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', '0', '#', ' ', ' ', ' ', 'B', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', 'P', '#'),
+            charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
+        ),
+        arrayOf( //Level 6
+            charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'),
+            charArrayOf('#', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', ' ', '#', '#', '#', '0', '#', ' ', '#'),
+            charArrayOf('#', 'X', '#', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', '#'),
+            charArrayOf('#', '#', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', '0', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', '#', ' ', '#', '#', '#', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', 'X', '#', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', '#', '#', '#', '#', '#', ' ', '#', '#'),
+            charArrayOf('#', ' ', ' ', '0', '#', ' ', ' ', ' ', 'B', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', '#', ' ', ' ', ' ', 'B', ' ', 'P', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
         )
     )
@@ -92,13 +106,15 @@ class GameMap(
             playerAsset = "characters/player.png", //<-- Switch correct image
             boxAsset = "boxes/jungleBoulder.png",
             goalAsset = "goals/jungleTarget.png",
+            holeAsset = "holes/jungleTile_broken.png",
             floorAsset = "flooring/jungleTile.png"
         ),
         2 to Theme(
             wallAsset = "walls/scifiWall.png",
             playerAsset = "characters/alien-monster.png",
-            boxAsset = "boxes/jungleBoulder.png", //<-- Switch correct image
+            boxAsset = "boxes/scifiBoulder.png",
             goalAsset = "goals/scifiTarget.png",
+            holeAsset = "holes/scifiTile_broken.png",
             floorAsset = "flooring/scifiTile.png"
         ),
         3 to Theme(
@@ -106,22 +122,34 @@ class GameMap(
             playerAsset = "characters/gnome.png",
             boxAsset = "boxes/pot_of_gold.png",
             goalAsset = "goals/fantasyTarget.png",
+            holeAsset = "holes/fantasyTile_broken.png",
             floorAsset = "flooring/fantasyTile.png"
         ),
         4 to Theme(
             wallAsset = "walls/ancientWall.png",
             playerAsset = "characters/alien-monster.png", //<-- Switch correct image
-            boxAsset = "boxes/jungleBoulder.png", //<-- Switch correct image
+            boxAsset = "boxes/ancientBoulder.png",
             goalAsset = "goals/ancientTarget.png",
+            holeAsset = "holes/ancientTile_broken.png",
             floorAsset = "flooring/ancientTile.png"
         ),
         5 to Theme(
             wallAsset = "walls/westernWall.png",
             playerAsset = "characters/alien-monster.png", //<-- Switch correct image
-            boxAsset = "boxes/jungleBoulder.png", //<-- Switch correct image
+            boxAsset = "boxes/westernBox.png",
             goalAsset = "goals/westernTarget.png",
+            holeAsset = "holes/westernTile_broken.png",
             floorAsset = "flooring/westernTile.png"
+        ),
+        5 to Theme(
+            wallAsset = "walls/horrorWall.png",
+            playerAsset = "characters/alien-monster.png", //<-- Switch correct image
+            boxAsset = "boxes/horrorBox.png",
+            goalAsset = "goals/horrorTarget.png",
+            holeAsset = "holes/horrorTile_broken.png",
+            floorAsset = "flooring/horrorTile.png"
         )
+
     )
 
     private val theme: Theme = themes[level] ?: throw IllegalArgumentException("Theme not found for level $level")
@@ -167,6 +195,7 @@ class GameMap(
                     'P' -> loadAssetImage(theme.playerAsset)  // Player
                     'B' -> loadAssetImage(theme.boxAsset)  // Box
                     'X' -> loadAssetImage(theme.goalAsset)  // Goal
+                    '0' -> loadAssetImage(theme.holeAsset) // Hole
                     ' ' -> loadAssetImage(theme.floorAsset) //Floor
                     else -> null  // Empty space (nothing displayed)
                 }
@@ -204,6 +233,7 @@ class GameMap(
         val playerAsset: String,
         val boxAsset: String,
         val goalAsset: String,
+        val holeAsset: String,
         val floorAsset: String
     )
 }
