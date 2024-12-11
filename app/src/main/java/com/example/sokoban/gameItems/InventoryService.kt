@@ -1,45 +1,30 @@
 package com.example.sokoban.gameItems
 
-import android.widget.Toast
-import com.example.sokoban.GameActivity
-import com.example.sokoban.players.Player
+class InventoryService {
+    private val items: MutableList<Item> = mutableListOf() // List to store items in inventory
 
-
-class InventoryService(private val gameActivity: GameActivity) {
-
-    private val inventory = mutableListOf<Item>()
-
-    // Add item to inventory
+    // Add an item to the inventory
     fun addItem(item: Item) {
-        inventory.add(item)
-        Toast.makeText(gameActivity, "You picked up a ${item.name}.", Toast.LENGTH_SHORT).show()
+        items.add(item)
     }
 
-    // Remove item from inventory
-    fun removeItem(item: Item) {
-        inventory.remove(item)
-        Toast.makeText(gameActivity, "You used the ${item.name}.", Toast.LENGTH_SHORT).show()
+    // Get an item by name (returns null if not found)
+    fun getItemByName(name: String): Item? {
+        return items.find { it.name == name }
     }
 
-    // Check if an item exists in inventory
-    fun hasItem(item: Item): Boolean {
-        return item in inventory
+    // Check if an item exists in the inventory by name
+    fun hasItem(name: String): Boolean {
+        return items.any { it.name == name }
     }
 
-    fun useItem(player: Player, item: Item) {
-        if (hasItem(item)) {
-            item.type.action(player, gameActivity, item)
-            if (item.usesLeft <= 0) {
-                item.usesLeft = 0
-                removeItem(item) // Remove the item if it's used up
-            }
-        } else {
-            Toast.makeText(gameActivity, "You don't have any ${item.type.displayName} to use!", Toast.LENGTH_SHORT).show()
-        }
+    // Remove an item from the inventory by name
+    fun removeItem(name: String) {
+        items.removeAll { it.name == name }
     }
 
-    // List the current items
-    fun listItems(): List<Item> {
-        return inventory
+    // Get the entire inventory
+    fun getInventory(): List<Item> {
+        return items
     }
 }

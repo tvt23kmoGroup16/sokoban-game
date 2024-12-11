@@ -3,11 +3,14 @@ package com.example.sokoban
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import com.example.sokoban.gameItems.InventoryService
+import com.example.sokoban.gameItems.Item
 
 class PlayerMovement(
     private val activity: GameActivity,
     private val gameMap: GameMap,
-    private val tvGameStatus: TextView
+    private val tvGameStatus: TextView,
+    val inventoryService: InventoryService
 ) {
     private var playerX: Int = 0  // Player's X position
     private var playerY: Int = 0  // Player's Y position
@@ -34,7 +37,8 @@ class PlayerMovement(
 
     // Function to store the current game state
     fun saveState() {
-        val mapStateCopy = Array(gameMap.map.size) { gameMap.map[it].clone() } // Create copy of game map
+        val mapStateCopy =
+            Array(gameMap.map.size) { gameMap.map[it].clone() } // Create copy of game map
         val playerPosition = Pair(playerX, playerY)  // Store player position
         val currentMoveCount = moveCount  // Store the move count
 
@@ -63,6 +67,7 @@ class PlayerMovement(
     }
 
     fun movePlayer(dx: Int, dy: Int) {
+
         val newX = playerX + dx
         val newY = playerY + dy
         val mapWidth = gameMap.map[0].size
@@ -74,6 +79,14 @@ class PlayerMovement(
             return
         }
 
+        // item auto-pickup
+        val item = "Item"
+        if (gameMap.map[newY][newX] == 'I') {
+            gameMap.map[newY][newX] = ' '
+            inventoryService.addItem()
+            Toast.makeText(activity, "You picked up an item!", Toast.LENGTH_SHORT).show()
+        }
+
         // Check if the destination is a wall ('#')
         if (gameMap.map[newY][newX] == '#') {
             Toast.makeText(activity, "Can't move there!", Toast.LENGTH_SHORT).show()
@@ -82,7 +95,8 @@ class PlayerMovement(
 
         // Check if the destination is a hole ('O')
         if (gameMap.map[newY][newX] == 'O') {
-            Toast.makeText(activity, "Player fell into a hole! Game Over!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Player fell into a hole! Game Over!", Toast.LENGTH_SHORT)
+                .show()
             Log.d("PlayerMovement", "Player fell into a hole at ($newX, $newY).")
             activity.showGameOverDialog()
             return
@@ -111,29 +125,55 @@ class PlayerMovement(
                         }
 
                         'O' -> {
+                            // storing the original position of the box
+                            val boxOriginalX = boxNewX
+                            val boxOriginalY = boxNewY
+
                             // Box falls into a hole
                             gameMap.map[boxNewY][boxNewX] = ' '  // Hole becomes empty
                             gameMap.map[newY][newX] = 'P'
                             gameMap.map[playerY][playerX] = ' '
 
-                            // Check for Item
-                            if (!checkForItem()) {
-                                Toast.makeText(
-                                    activity,
-                                    "Box fell into a hole! No special item uses left. Game Over!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            // Check for magic wand
+                            val wand = inventoryService.getItemByName("Magic Wand")
+                            if (wand != null && wand.usesLeft > 0) {
+                                wand.usesLeft -= 1
                                 Log.d(
                                     "PlayerMovement",
-                                    "Game Over: No special item found after box fell into hole."
+                                    "Magic Wand used. Remaining uses: ${wand.usesLeft}"
+                                )
+                                // Box falls into the hole, but the player used the magic wand to stop the game over
+                                Toast.makeText(
+                                    activity,
+                                    "The box fell into the hole, but you used the Magic Wand!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                //Set the box to its original position
+                                gameMap.map[boxOriginalY][boxOriginalX] = 'B'
+                            } else {
+                                // No magic wand or no uses left
+                                if (wand == null) {
+                                    Toast.makeText(
+                                        activity,
+                                        "No Magic Wand in inventory!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        activity,
+                                        "Magic Wand has no uses left! Game Over!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                                // Proceeding to Game over
+                                Log.d(
+                                    "PlayerMovement",
+                                    "Game Over: No magic wand or no uses left after box fell into hole."
                                 )
                                 activity.showGameOverDialog()
                                 return
                             }
-
-                            // Update player position
-                            playerX = newX
-                            playerY = newY
                         }
 
                         else -> {
@@ -141,45 +181,41 @@ class PlayerMovement(
                                 .show()
                         }
                     }
-
-                    // Increment move count and save game state
-                    incrementMoveCount()
-                    saveState()
                 } else {
-                    Toast.makeText(activity, "Box can't move there!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Box can't move out of bounds!", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else {
-                Toast.makeText(activity, "Box can't move out of bounds!", Toast.LENGTH_SHORT).show()
+                // Handle normal player movement
+                gameMap.map[newY][newX] = 'P'  // Move player to new position
+                gameMap.map[playerY][playerX] = ' '  // Empty the old position
+
+                // Update player position
+                playerX = newX
+                playerY = newY
+
+                // Increment move count and save game state
+                incrementMoveCount()
+                saveState()
             }
-        } else {
-            // Handle normal player movement
-            gameMap.map[newY][newX] = 'P'  // Move player to new position
-            gameMap.map[playerY][playerX] = ' '  // Empty the old position
 
-            // Update player position
-            playerX = newX
-            playerY = newY
+            // Render the updated map and update game status
+            gameMap.renderMap()
+            updateMoveCount()
 
-            // Increment move count and save game state
-            incrementMoveCount()
-            saveState()
-        }
+            // Check for win condition
+            if (checkWinCondition()) {
+                activity.showWinDialog(moveCount)
+            }
 
-        // Render the updated map and update game status
-        gameMap.renderMap()
-        updateMoveCount()
-
-        // Check for win condition
-        if (checkWinCondition()) {
-            activity.showWinDialog(moveCount)
-        }
-
-        // Check for no moves left
-        if (checkForNoMovesLeft()) {
-            Toast.makeText(activity, "No moves left! Game over!", Toast.LENGTH_SHORT).show()
-            activity.showGameOverDialog()
+            // Check for no moves left
+            if (checkForNoMovesLeft()) {
+                Toast.makeText(activity, "No moves left! Game over!", Toast.LENGTH_SHORT).show()
+                activity.showGameOverDialog()
+            }
         }
     }
+
     fun checkForNoMovesLeft(): Boolean {
         val directions = listOf(
             Pair(0, -1),  // Up
@@ -216,11 +252,11 @@ class PlayerMovement(
         return true
     }
 
-    private fun incrementMoveCount() {
+    fun incrementMoveCount() {
         moveCount++
     }
 
-    private fun updateMoveCount() {
+    fun updateMoveCount() {
         tvGameStatus.text = "Moves: $moveCount"
     }
 
@@ -241,3 +277,5 @@ class PlayerMovement(
         val moveCount: Int
     )
 }
+
+

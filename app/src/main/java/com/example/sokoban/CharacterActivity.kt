@@ -24,7 +24,7 @@ class CharacterActivity : AppCompatActivity() {
             "characters/character2.png",
             "characters/player.png"
         )
-        characterNames = arrayOf("Alien", "Gnome", "Lego Indy")
+        characterNames = arrayOf("Alien", "Gnome", "Human")
 
         val imgCharacter: ImageView = findViewById(R.id.img_character)
         val tvCharacterName: TextView = findViewById(R.id.tv_character_name)
@@ -55,7 +55,7 @@ class CharacterActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateCharacterDisplay(imgCharacter: ImageView, tvCharacterName: TextView) {
+    fun updateCharacterDisplay(imgCharacter: ImageView, tvCharacterName: TextView) {
         // Load the image from assets
         try {
             val assetManager = assets

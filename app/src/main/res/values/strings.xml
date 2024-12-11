@@ -17,4 +17,6 @@
     <string name="new_here">New here?</string>
     <string name="user_name">Username: %1$s</string>
     <string name="user_email">Email: %1$s</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_description">Item Description</string>
 </resources>

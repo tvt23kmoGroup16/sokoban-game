@@ -44,7 +44,6 @@ class GameActivity : AppCompatActivity() {
     private var userId: Long = -1L // Default value indicating no user logged in
 
     private lateinit var player: Player  // This should be either Alien or Gnome
-    private var currentItem: Item? = null  // The current item the player holds
 
     private val timerRunnable = object : Runnable {
         override fun run() {
@@ -147,7 +146,14 @@ class GameActivity : AppCompatActivity() {
         playerMovement.undoMove()
         updateGameStatus()
     }
-
+/**
+ * Make this button here for the player to se the inventory
+    val openInventoryButton = findViewById<Button>(R.id.open_inventory_button)
+    openInventoryButton.setOnClickListener {
+        val intent = Intent(this, InventoryActivity::class.java)
+        startActivity(intent)
+    }
+   */
     fun showGameOverDialog() {
         if (timerRunning) {
             timerHandler.removeCallbacks(timerRunnable)

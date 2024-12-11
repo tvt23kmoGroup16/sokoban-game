@@ -3,6 +3,7 @@ package com.example.sokoban.utils
 import android.view.View
 import android.widget.GridLayout
 import android.widget.ImageView
+import com.example.sokoban.players.Player
 import kotlin.math.absoluteValue
 
 object TileUtils {
@@ -132,3 +133,96 @@ object TileUtils {
         return emptyTiles
     }
 
+/**
+ * Finds the nearest tile with a specific tag.
+ */
+    fun findNearestTileWithTag(
+        layout: GridLayout,
+        playerPosition: Pair<Int, Int>,
+        tag: String,
+        range: Int
+    ): View? {
+        // Assuming that the range is the maximum distance you're willing to search
+        val (playerRow, playerColumn) = playerPosition
+        for (r in (playerRow - range)..(playerRow + range)) {
+            for (c in (playerColumn - range)..(playerColumn + range)) {
+                // Check if the tile is within bounds
+                if (r in 0 until layout.rowCount && c in 0 until layout.columnCount) {
+                    val tile = layout.getChildAt(r * layout.columnCount + c)
+                    if (tile.tag == tag) {
+                        return tile
+                    }
+                }
+            }
+        }
+        return null // Return null if no box is found within the range
+    }
+
+
+/**
+ * Finds all tiles within a specific range and direction, considering obstacles.
+ */
+fun findTileInRange(
+    layout: GridLayout,
+    startRow: Int,
+    startColumn: Int,
+    range: Int,
+    direction: Player.Direction,
+    obstacleTag: String? = null
+): View? {
+    val rowCount = layout.rowCount
+    val columnCount = layout.columnCount
+
+    for (distance in 1..range) {
+        val targetRow: Int = when (direction) {
+            Player.Direction.UP -> startRow - distance
+            Player.Direction.DOWN -> startRow + distance
+            Player.Direction.LEFT -> startRow
+            Player.Direction.RIGHT -> startRow
+        }
+
+        val targetColumn: Int = when (direction) {
+            Player.Direction.UP, Player.Direction.DOWN -> startColumn
+            Player.Direction.LEFT -> startColumn - distance
+            Player.Direction.RIGHT -> startColumn + distance
+        }
+
+        // Check if the target is within bounds
+        if (targetRow in 0 until rowCount && targetColumn in 0 until columnCount) {
+            val index = targetRow * columnCount + targetColumn
+            val targetTile = layout.getChildAt(index)
+
+            // Check for null safety
+            if (targetTile != null) {
+                // If an obstacle is encountered, stop searching further
+                if (obstacleTag != null && targetTile.tag == obstacleTag) {
+                    break
+                }
+
+                // Return the first tile with the specified tag
+                if (targetTile.tag == "box") {
+                    return targetTile
+                }
+            }
+        }
+    }
+    return null // No valid tile found
+}
+
+/**
+ * Counts remaining boxes on the Grid layout
+ */
+fun countRemainingBoxes(layout: GridLayout): Int {
+    var count = 0
+
+    for (row in 0 until layout.rowCount) {
+        for (col in 0 until layout.columnCount) {
+            val tile = layout.getChildAt(row * layout.columnCount + col)
+            if (tile?.tag == "box") {
+                count++
+            }
+        }
+    }
+
+    return count
+}

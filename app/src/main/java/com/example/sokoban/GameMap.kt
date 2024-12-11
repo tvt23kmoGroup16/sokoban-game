@@ -107,7 +107,8 @@ class GameMap(
             boxAsset = "boxes/jungleBoulder.png",
             goalAsset = "goals/jungleTarget.png",
             holeAsset = "holes/jungleTile_broken.png",
-            floorAsset = "flooring/jungleTile.png"
+            floorAsset = "flooring/jungleTile.png",
+            itemAsset = "items/"
         ),
         2 to Theme(
             wallAsset = "walls/scifiWall.png",
@@ -115,7 +116,8 @@ class GameMap(
             boxAsset = "boxes/scifiBoulder.png",
             goalAsset = "goals/scifiTarget.png",
             holeAsset = "holes/scifiTile_broken.png",
-            floorAsset = "flooring/scifiTile.png"
+            floorAsset = "flooring/scifiTile.png",
+            itemAsset = "items/"
         ),
         3 to Theme(
             wallAsset = "walls/fantasyWall.png",
@@ -123,7 +125,8 @@ class GameMap(
             boxAsset = "boxes/pot_of_gold.png",
             goalAsset = "goals/fantasyTarget.png",
             holeAsset = "holes/fantasyTile_broken.png",
-            floorAsset = "flooring/fantasyTile.png"
+            floorAsset = "flooring/fantasyTile.png",
+            itemAsset = "items/"
         ),
         4 to Theme(
             wallAsset = "walls/ancientWall.png",
@@ -131,7 +134,8 @@ class GameMap(
             boxAsset = "boxes/ancientBoulder.png",
             goalAsset = "goals/ancientTarget.png",
             holeAsset = "holes/ancientTile_broken.png",
-            floorAsset = "flooring/ancientTile.png"
+            floorAsset = "flooring/ancientTile.png",
+            itemAsset = "items/"
         ),
         5 to Theme(
             wallAsset = "walls/westernWall.png",
@@ -139,7 +143,8 @@ class GameMap(
             boxAsset = "boxes/westernBox.png",
             goalAsset = "goals/westernTarget.png",
             holeAsset = "holes/westernTile_broken.png",
-            floorAsset = "flooring/westernTile.png"
+            floorAsset = "flooring/westernTile.png",
+            itemAsset = "items/"
         ),
         6 to Theme(
             wallAsset = "walls/horrorWall.png",
@@ -147,7 +152,8 @@ class GameMap(
             boxAsset = "boxes/horrorBox.png",
             goalAsset = "goals/horrorTarget.png",
             holeAsset = "holes/horrorTile_broken.png",
-            floorAsset = "flooring/horrorTile.png"
+            floorAsset = "flooring/horrorTile.png",
+            itemAsset = "items/"
         )
 
     )
@@ -196,6 +202,7 @@ class GameMap(
                     'B' -> loadAssetImage(theme.boxAsset)  // Box
                     'X' -> loadAssetImage(theme.goalAsset)  // Goal
                     'O' -> loadAssetImage(theme.holeAsset) // Hole
+                    'I' -> loadAssetImage(theme.itemAsset) // Item
                     ' ' -> loadAssetImage(theme.floorAsset) //Floor
                     else -> null  // Empty space (nothing displayed)
                 }
@@ -234,6 +241,7 @@ class GameMap(
         val playerAsset: String,
         val boxAsset: String,
         val goalAsset: String,
+        val itemAsset: String,
         val holeAsset: String,
         val floorAsset: String
     )
