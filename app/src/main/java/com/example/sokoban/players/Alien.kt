@@ -7,6 +7,8 @@ import com.example.sokoban.GameActivity
 import com.example.sokoban.gameItems.Item
 import com.example.sokoban.gameItems.ItemType
 import com.example.sokoban.utils.TileUtils
+import com.example.sokoban.utils.countRemainingBoxes
+import com.example.sokoban.utils.findNearestTileWithTag
 
 class Alien(context: Context, layout: GridLayout, level: Int) : Player(context, layout, level, PlayerType.ALIEN) {
     override fun useItem(item: Item) {
@@ -14,13 +16,14 @@ class Alien(context: Context, layout: GridLayout, level: Int) : Player(context, 
             ItemType.RAY_GUN -> destroyNearestBox(item, 3)
             ItemType.SPEED_BOOTS -> activateSpeedBoots(item)
             ItemType.MAGIC_WAND -> useMagicWand(item)
-            else -> Toast.makeText(context, "You don't know how to use this!", Toast.LENGTH_SHORT).show()
+            else -> Toast.makeText(context, "You don't know how to use this!", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
-override fun destroyNearestBox(item: Item, range: Int) {
+     fun destroyNearestBox(item: Item, range: Int) {
         val playerPosition = getPlayerPosition()
-        val nearestBoxTile = TileUtils.findNearestTileWithTag(layout, playerPosition, "box")
+        val nearestBoxTile = findNearestTileWithTag(layout, playerPosition, "B", 3)
 
         if (nearestBoxTile != null) {
             TileUtils.clearTile(nearestBoxTile)
@@ -32,18 +35,11 @@ override fun destroyNearestBox(item: Item, range: Int) {
         } else {
             Toast.makeText(context, "No boulder found nearby!", Toast.LENGTH_SHORT).show()
         }
+         checkWinCondition()
     }
 
-    fun checkWinCondition() {
-        val remainingBoxes = TileUtils.countRemainingBoxes(layout)
-        if (remainingBoxes == 0) {
-            (context as? GameActivity)?.showWinDialog()
-        } else {
-            Toast.makeText(context, "$remainingBoxes boulders remaining.", Toast.LENGTH_SHORT).show()
-        }
-    }
 
-    // Gnome-specific activateSpeedBoots implementation
+    //Alien-specific activateSpeedBoots implementation
     override fun activateSpeedBoots(item: Item) {
         if (item.usesLeft > 0) {
             val newPosition = getNewPositionForSpeedBoost()
@@ -56,13 +52,8 @@ override fun destroyNearestBox(item: Item, range: Int) {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                Toast.makeText(context, "Cannot move with Speed Boots!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Cannot move to this position!", Toast.LENGTH_SHORT).show()
             }
-            if (item.usesLeft <= 0) {
-                Toast.makeText(context, "Speed Boots are out of uses!", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(context, "Speed Boots are out of uses!", Toast.LENGTH_SHORT).show()
         }
     }
 }

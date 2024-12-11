@@ -8,8 +8,12 @@ import android.view.View
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.Toast
+import com.example.sokoban.GameActivity
 import com.example.sokoban.gameItems.Item
 import com.example.sokoban.gameItems.ItemType
+import com.example.sokoban.utils.TileUtils
+import com.example.sokoban.utils.countRemainingBoxes
+import com.example.sokoban.utils.findNearestTileWithTag
 import java.io.IOException
 import java.io.InputStream
 
@@ -33,8 +37,8 @@ open class Player(
         when (item.type) {
             ItemType.SPEED_BOOTS -> activateSpeedBoots(item)
             ItemType.MAGIC_WAND -> useMagicWand(item)
-            ItemType.RAY_GUN -> destroyNearestBox(item, 3)
-            ItemType.MAGIC_CLUB -> destroyNearestBox(item, 2)
+            ItemType.RAY_GUN -> useItem(item)
+            ItemType.MAGIC_CLUB -> useItem(item)
             else -> {
                 Toast.makeText(context, "You cannot use this item!", Toast.LENGTH_SHORT).show()
             }
@@ -46,17 +50,11 @@ open class Player(
             if (newPosition != null) {
                 movePlayerToNewPosition(newPosition)
                 item.usesLeft = maxOf(item.usesLeft - 1, 0)
-                Toast.makeText(context, "Speed Boots activated! Moved 2 tiles. Uses remaining: ${item.usesLeft}.", Toast.LENGTH_SHORT).show()
-            }
-                else {
-                Toast.makeText(context, "Cannot move with Speed Boots!", Toast.LENGTH_SHORT).show()
-                }
-            // After using the boots, check if there are remaining uses
-                if (item.usesLeft == 0) {
-                Toast.makeText(context, "Speed Boots are out of uses!", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(context, "Speed Boots activated! Moved 2 tiles.", Toast.LENGTH_SHORT)
+                    .show()
             } else {
-            Toast.makeText(context, "Speed Boots are out of uses!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Cannot move with Speed Boots!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -67,20 +65,19 @@ open class Player(
             placeBox(targetTile)
             item.usesLeft = maxOf(item.usesLeft - 1, 0)
         }
-            if (item.usesLeft == 0) {
-                Toast.makeText(context, "Magic Wand has no more uses!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, "Magic Wand uses remaining: ${item.usesLeft}", Toast.LENGTH_SHORT).show()
-            }
         } else {
             Toast.makeText(context, "No space available to create a new boulder!", Toast.LENGTH_SHORT).show()
         }
     }
 
-    open fun destroyNearestBox(item: Item, range: Int) {
-
+    fun useItemWithFeedback(item: Item, itemName: String, action: () -> Unit) {
+        if (item.usesLeft > 0) {
+            action()
+            Toast.makeText(context, "$itemName uses remaining: ${item.usesLeft}", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "$itemName is out of uses!", Toast.LENGTH_SHORT).show()
+        }
     }
-
 
     fun getPlayerPosition(): Pair<Int, Int> {
         return Pair(currentRow, currentColumn)
@@ -142,8 +139,7 @@ open class Player(
         }
     }
 
-
-    fun getTargetTileInDirection(direction: Direction): View? {
+    open fun getTargetTileInDirection(direction: Direction): View? {
         val (newRow, newCol) = when (direction) {
             Direction.UP -> currentRow - 1 to currentColumn
             Direction.DOWN -> currentRow + 1 to currentColumn
@@ -153,7 +149,7 @@ open class Player(
 
         return if (newRow in 0 until layout.rowCount && newCol in 0 until layout.columnCount) {
             val targetTile = layout.getChildAt(newRow * layout.columnCount + newCol)
-            if (targetTile.tag == " ") targetTile else null
+            if (targetTile.tag == " ") targetTile else null  // Check if tile is empty (tag == " ")
         } else {
             null
         }
@@ -164,7 +160,7 @@ open class Player(
         if (boxBitmap != null) {
             val imageView = tile.findViewById<ImageView>(android.R.id.icon)
             imageView?.setImageBitmap(boxBitmap)
-            tile.tag = "box" // Mark the tile as occupied by a box
+            tile.tag = "B" // Mark the tile as occupied by a box
             Toast.makeText(context, "You wave the wand and create a boulder!", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(context, "Error loading box image", Toast.LENGTH_SHORT).show()
@@ -191,6 +187,15 @@ open class Player(
         }
     }
 
+    fun checkWinCondition() {
+        val remainingBoxes = countRemainingBoxes(layout)
+        if (remainingBoxes == 0) {
+            (context as? GameActivity)?.showWinDialog(moveCount)
+        } else {
+            Toast.makeText(context, "$remainingBoxes boulders remaining.", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
     enum class PlayerType(val displayName: String) {
         ALIEN("Alien"),
         GNOME("Gnome"),
@@ -198,3 +203,6 @@ open class Player(
         ALL("All")
     }
 }
+
+
+

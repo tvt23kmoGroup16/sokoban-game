@@ -10,7 +10,8 @@ class PlayerMovement(
     private val activity: GameActivity,
     private val gameMap: GameMap,
     private val tvGameStatus: TextView,
-    val inventoryService: InventoryService
+    val inventoryService: InventoryService,
+    private val itemMapping: Map<Char, Item>
 ) {
     private var playerX: Int = 0  // Player's X position
     private var playerY: Int = 0  // Player's Y position
@@ -80,11 +81,17 @@ class PlayerMovement(
         }
 
         // item auto-pickup
-        val item = "Item"
-        if (gameMap.map[newY][newX] == 'I') {
-            gameMap.map[newY][newX] = ' '
-            inventoryService.addItem()
-            Toast.makeText(activity, "You picked up an item!", Toast.LENGTH_SHORT).show()
+        val itemChar = gameMap.map[newY][newX]
+        val item = itemMapping[itemChar]  // Get the Item object from the map
+
+        if (item != null) {
+            gameMap.map[newY][newX] = ' '  // Remove the item from the map (empty space)
+
+            // Add the item to the inventory
+            inventoryService.addItem(item)
+
+            // inform the player about the item they picked up
+            Toast.makeText(activity, "You picked up: ${item.name}", Toast.LENGTH_SHORT).show()
         }
 
         // Check if the destination is a wall ('#')

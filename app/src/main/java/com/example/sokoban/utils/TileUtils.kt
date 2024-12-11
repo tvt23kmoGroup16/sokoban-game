@@ -32,7 +32,7 @@ object TileUtils {
 
                 if (newRow in 0 until rows && newCol in 0 until cols) {
                     val tile = layout.getChildAt(newRow * cols + newCol)
-                    if (tile.tag == "box") {
+                    if (tile.tag == "B") {
                         return tile
                     }
                 }
@@ -200,7 +200,7 @@ fun findTileInRange(
                 }
 
                 // Return the first tile with the specified tag
-                if (targetTile.tag == "box") {
+                if (targetTile.tag == "B") {
                     return targetTile
                 }
             }
@@ -218,11 +218,10 @@ fun countRemainingBoxes(layout: GridLayout): Int {
     for (row in 0 until layout.rowCount) {
         for (col in 0 until layout.columnCount) {
             val tile = layout.getChildAt(row * layout.columnCount + col)
-            if (tile?.tag == "box") {
+            if (tile?.tag == 'B') {
                 count++
             }
         }
     }
-
     return count
 }

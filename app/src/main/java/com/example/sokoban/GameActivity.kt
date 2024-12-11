@@ -14,7 +14,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sokoban.db.DatabaseHelper
 import com.example.sokoban.db.repositories.SettingsRepository
-import com.google.android.gms.games.Player
+import com.example.sokoban.gameItems.InventoryService
+import com.example.sokoban.gameItems.Item
+import com.example.sokoban.gameItems.ItemType
+import com.example.sokoban.gameItems.RandomItemGenerator
+import com.example.sokoban.players.Player
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 
 class GameActivity : AppCompatActivity() {
 
@@ -30,6 +38,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var swipeScreen: SwipeScreen
     private lateinit var btnRestart: Button
     private lateinit var btnUndo: Button
+    private lateinit var randomItemGenerator: RandomItemGenerator
 
     private var level = 1 // Track the current level
 
@@ -82,12 +91,30 @@ class GameActivity : AppCompatActivity() {
         btnRestart = findViewById(R.id.btn_restart)
         btnUndo = findViewById(R.id.btn_undo)
 
+        val inventoryService = InventoryService()
+        val randomItemGenerator = RandomItemGenerator() // Initialize random item generator
+
+        val itemMapping: Map<Char, Item> = mapOf(
+            'R' to Item("Ray Gun",  ItemType.RAY_GUN,  "A powerful laser weapon made of strange metal.", 1, 1),
+            'M' to Item("Magic Club", ItemType.MAGIC_CLUB, "A mystical club with special powers.", 2, 1),
+            'S' to Item("Speed Boots", ItemType.SPEED_BOOTS, "Shiny boots of movement speed.",3, 3),
+            'W' to Item("Magic Wand", ItemType.MAGIC_WAND, "A wand with magical properties.", 4, 3)
+        )
         // Initialize game map with the correct level
-        gameMap = GameMap(gridGameMap, assets, level)
-        playerMovement = PlayerMovement(this, gameMap, tvGameStatus)
+
+        gameMap = GameMap(
+            gridGameMap = gridGameMap,
+            assets = assets,
+            level = level,
+            stepsTaken = playerMovement.moveCount,
+            randomItemGenerator = randomItemGenerator)
+        playerMovement = PlayerMovement(this, gameMap, tvGameStatus,inventoryService, itemMapping)
 
         // Render map
         gameMap.renderMap()
+
+        //Calling the function
+        placeRandomItems()
 
         // Button-based movement
         btnUp.setOnClickListener { movePlayerAndUpdate(0, -1) }
@@ -118,6 +145,7 @@ class GameActivity : AppCompatActivity() {
         playerMovement.movePlayer(dx, dy)
         updateGameStatus()
 
+
         // Check for game over
         if (playerMovement.checkForNoMovesLeft()) {
             showGameOverDialog()
@@ -128,6 +156,15 @@ class GameActivity : AppCompatActivity() {
         tvGameStatus.text = "Moves: ${playerMovement.moveCount}"
     }
 
+    private fun placeRandomItems() {
+        // Calling placeRandomItems function with appropriate parameters
+        val itemCount = randomItemGenerator.calculateItemCount(level, playerMovement.moveCount)
+        val stepsTaken = playerMovement.moveCount
+
+        randomItemGenerator.placeRandomItems(gameMap.map, level = level, itemCount = itemCount, stepsTaken = stepsTaken)
+    }
+
+
     private fun restartGame() {
         if (timerRunning) {
             timerHandler.removeCallbacks(timerRunnable)
@@ -136,9 +173,25 @@ class GameActivity : AppCompatActivity() {
         elapsedTime = 0L
         tvTimer.text = "00:00" // Reset timer display
 
-        gameMap = GameMap(gridGameMap, assets, level)  // Reset game map
-        playerMovement = PlayerMovement(this, gameMap, tvGameStatus)  // Reinitialize player movement
+        val inventoryService = InventoryService()
+        val randomItemGenerator = RandomItemGenerator()
+        val itemMapping: Map<Char, Item> = mapOf(
+            'R' to Item("Ray Gun",  ItemType.RAY_GUN,  "A powerful laser weapon made of strange metal.", 1, 1),
+            'M' to Item("Magic Club", ItemType.MAGIC_CLUB, "A mystical club with special powers.", 2, 1),
+            'S' to Item("Speed Boots", ItemType.SPEED_BOOTS, "Shiny boots of movement speed.",3, 3),
+            'W' to Item("Magic Wand", ItemType.MAGIC_WAND, "A wand with magical properties.", 4, 3)
+        )
+
+        gameMap = GameMap(
+            gridGameMap = gridGameMap,
+            assets = assets,
+            level = level,
+            stepsTaken = playerMovement.moveCount,
+            randomItemGenerator = randomItemGenerator
+        )  // Reset game map
+        playerMovement = PlayerMovement(this, gameMap, tvGameStatus, inventoryService, itemMapping)  // Reinitialize player movement
         gameMap.renderMap()  // Render the map again
+        placeRandomItems()
         updateGameStatus()  // Update the status view
     }
 
@@ -146,14 +199,7 @@ class GameActivity : AppCompatActivity() {
         playerMovement.undoMove()
         updateGameStatus()
     }
-/**
- * Make this button here for the player to se the inventory
-    val openInventoryButton = findViewById<Button>(R.id.open_inventory_button)
-    openInventoryButton.setOnClickListener {
-        val intent = Intent(this, InventoryActivity::class.java)
-        startActivity(intent)
-    }
-   */
+
     fun showGameOverDialog() {
         if (timerRunning) {
             timerHandler.removeCallbacks(timerRunnable)
@@ -222,7 +268,7 @@ class GameActivity : AppCompatActivity() {
         val totalTimeInSeconds = (elapsedTime / 1000).toInt()
 
         // Get the current date as a string
-        val currentDate = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
         // Add high score to the database
         val highScoreId = dbHelper.addHighScore(userId, level, totalTimeInSeconds, moveCount, currentDate)

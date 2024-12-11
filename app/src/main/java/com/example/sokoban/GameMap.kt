@@ -5,15 +5,21 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.GridLayout
 import android.widget.ImageView
+import com.badlogic.gdx.math.FloatCounter
+import com.example.sokoban.gameItems.RandomItemGenerator
+import com.example.sokoban.players.Player
+import kotlin.random.Random
 
 class GameMap(
     private val gridGameMap: GridLayout,
     private val assets: AssetManager,
-    private val level: Int
+    private val level: Int,
+    private val stepsTaken: Int,
+    val randomItemGenerator: RandomItemGenerator
 ) {
 
     // Define the map for each level
-    private val mapLevels = arrayOf(
+    val mapLevels = arrayOf(
         arrayOf( //Level 1
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
@@ -108,7 +114,12 @@ class GameMap(
             goalAsset = "goals/jungleTarget.png",
             holeAsset = "holes/jungleTile_broken.png",
             floorAsset = "flooring/jungleTile.png",
-            itemAsset = "items/"
+            itemAsset = mutableListOf(
+                "items/speedBoots.png",
+                "items/magicWand.png",
+                "items/rayGun.png",
+                "items/magicClub.png"
+            )
         ),
         2 to Theme(
             wallAsset = "walls/scifiWall.png",
@@ -117,7 +128,12 @@ class GameMap(
             goalAsset = "goals/scifiTarget.png",
             holeAsset = "holes/scifiTile_broken.png",
             floorAsset = "flooring/scifiTile.png",
-            itemAsset = "items/"
+            itemAsset = mutableListOf(
+                "items/speedBoots.png",
+                "items/magicWand.png",
+                "items/rayGun.png",
+                "items/magicClub.png"
+            )
         ),
         3 to Theme(
             wallAsset = "walls/fantasyWall.png",
@@ -126,7 +142,12 @@ class GameMap(
             goalAsset = "goals/fantasyTarget.png",
             holeAsset = "holes/fantasyTile_broken.png",
             floorAsset = "flooring/fantasyTile.png",
-            itemAsset = "items/"
+            itemAsset = mutableListOf(
+                "items/speedBoots.png",
+                "items/magicWand.png",
+                "items/rayGun.png",
+                "items/magicClub.png"
+            )
         ),
         4 to Theme(
             wallAsset = "walls/ancientWall.png",
@@ -135,7 +156,12 @@ class GameMap(
             goalAsset = "goals/ancientTarget.png",
             holeAsset = "holes/ancientTile_broken.png",
             floorAsset = "flooring/ancientTile.png",
-            itemAsset = "items/"
+            itemAsset = mutableListOf(
+                "items/speedBoots.png",
+                "items/magicWand.png",
+                "items/rayGun.png",
+                "items/magicClub.png"
+            )
         ),
         5 to Theme(
             wallAsset = "walls/westernWall.png",
@@ -144,7 +170,12 @@ class GameMap(
             goalAsset = "goals/westernTarget.png",
             holeAsset = "holes/westernTile_broken.png",
             floorAsset = "flooring/westernTile.png",
-            itemAsset = "items/"
+            itemAsset = mutableListOf(
+                "items/speedBoots.png",
+                "items/magicWand.png",
+                "items/rayGun.png",
+                "items/magicClub.png"
+            )
         ),
         6 to Theme(
             wallAsset = "walls/horrorWall.png",
@@ -153,13 +184,16 @@ class GameMap(
             goalAsset = "goals/horrorTarget.png",
             holeAsset = "holes/horrorTile_broken.png",
             floorAsset = "flooring/horrorTile.png",
-            itemAsset = "items/"
+            itemAsset = mutableListOf(
+                "items/speedBoots.png",
+                "items/magicWand.png",
+                "items/rayGun.png",
+                "items/magicClub.png"
+            )
         )
-
     )
 
     private val theme: Theme = themes[level] ?: throw IllegalArgumentException("Theme not found for level $level")
-
     // Select the map based on the level
     var map: Array<CharArray> = mapLevels[level - 1] // Get the map based on the selected level
 
@@ -169,6 +203,7 @@ class GameMap(
 
     init {
         findGoalPositions()
+        placeRandomItems(level, stepsTaken)
         renderMap()
     }
 
@@ -183,6 +218,28 @@ class GameMap(
         }
     }
 
+    private val itemAsset = theme.itemAsset
+
+    private fun getRandomItem(): String {
+        return if (itemAsset.isNotEmpty()) {
+            itemAsset[Random.nextInt(itemAsset.size)]
+        } else
+        " "
+    }
+    private fun placeRandomItems(level: Int, stepsTaken: Int) {
+        lateinit var player: Player
+               for (y in map.indices) {
+            for (x in map[y].indices) {
+                if (map[y][x] == ' ' && Random.nextDouble() < 0.1) { // 10% chance to place an item
+                    val randomItem = randomItemGenerator.getRandomItem(player, level, stepsTaken)
+                    randomItem?.let { // Only place the item if it's not null
+                        map[y][x] = it.charRepresentation
+                    }
+                }
+            }
+        }
+    }
+
     fun renderMap() {
         gridGameMap.removeAllViews() // Clear previous views
 
@@ -190,6 +247,7 @@ class GameMap(
         val context = gridGameMap.context
         val screenWidth = context.resources.displayMetrics.widthPixels
         val cellSize = (screenWidth - gridGameMap.paddingLeft - gridGameMap.paddingRight) / map[0].size // Adjust cell size based on map width
+
 
         for (y in map.indices) {
             for (x in map[y].indices) {
@@ -202,8 +260,9 @@ class GameMap(
                     'B' -> loadAssetImage(theme.boxAsset)  // Box
                     'X' -> loadAssetImage(theme.goalAsset)  // Goal
                     'O' -> loadAssetImage(theme.holeAsset) // Hole
-                    'I' -> loadAssetImage(theme.itemAsset) // Item
+                    'I' -> loadAssetImage(getRandomItem()) // Load a random item asset
                     ' ' -> loadAssetImage(theme.floorAsset) //Floor
+
                     else -> null  // Empty space (nothing displayed)
                 }
 
@@ -241,7 +300,7 @@ class GameMap(
         val playerAsset: String,
         val boxAsset: String,
         val goalAsset: String,
-        val itemAsset: String,
+        val itemAsset: List<String>,
         val holeAsset: String,
         val floorAsset: String
     )
