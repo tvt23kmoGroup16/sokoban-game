@@ -121,6 +121,18 @@ class PlayerMovement (
 
                         }
 
+                        'X' -> {
+                            // Box is placed on the goal
+                            gameMap.map[boxNewY][boxNewX] = 'B'  // The box now occupies the goal
+                            gameMap.map[newY][newX] = 'P'
+                            gameMap.map[playerY][playerX] = ' '
+
+                            // Check the win condition if the box is placed on the goal
+                            if (checkWinCondition()) {
+                                activity.showWinDialog(moveCount)
+                            }
+                        }
+
                         else -> {
                             Toast.makeText(activity, "Box can't move there!", Toast.LENGTH_SHORT)
                                 .show()
@@ -154,6 +166,7 @@ class PlayerMovement (
             // Update player position
             playerX = newX
             playerY = newY
+
 
             // Increment move count and save game state
             incrementMoveCount()
