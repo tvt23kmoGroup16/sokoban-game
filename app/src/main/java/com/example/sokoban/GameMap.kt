@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.GridLayout
 import android.widget.ImageView
-import com.example.sokoban.gameItems.RandomItemGenerator
 
 
 class GameMap(
