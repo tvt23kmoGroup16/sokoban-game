@@ -39,7 +39,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var btnRestart: Button
     private lateinit var btnUndo: Button
 
-
     private var level = 1 // Track the current level
 
     // Timer variables
@@ -179,7 +178,7 @@ class GameActivity : AppCompatActivity() {
 
         AlertDialog.Builder(this)
             .setTitle("Game Over")
-            .setMessage("No moves left or a critical error occurred.")
+            .setMessage("No moves left.")
             .setPositiveButton("Retry") { dialog, _ ->
                 dialog.dismiss()
                 restartGame() // Restart the current level

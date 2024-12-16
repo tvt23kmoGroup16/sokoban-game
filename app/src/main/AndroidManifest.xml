@@ -10,59 +10,66 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Sokoban">
+        android:theme="@style/Theme.AppCompat">
+
         <activity
             android:name=".LeaderboardActivity"
             android:exported="false"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.AppCompat" />
+
         <activity
             android:name=".CharacterActivity"
             android:exported="false"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.AppCompat" />
+
         <activity
             android:name=".OptionsActivity"
             android:exported="false"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.AppCompat" />
+
         <activity
             android:name=".LevelSelectionActivity"
             android:exported="false"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.AppCompat" />
+
+        <!-- Main Menu Activity, should be the launcher activity -->
         <activity
             android:name=".MainMenuActivity"
             android:exported="true"
-            android:theme="@style/Theme.Sokoban">
-
-            <!-- android:theme="@style/Theme.Sokoban" -->
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Game Activity -->
+        </activity>
+
+        <!-- Game Activity -->
         <activity
             android:name=".GameActivity"
             android:exported="true"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.Appcompat" />
+
+        <!-- Authentication Activities -->
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.Appcompat" />
+
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="true"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.Appcompat" />
+
         <activity
             android:name=".RegisterActivity"
             android:exported="true"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.Appcompat" />
+
         <activity
             android:name=".UserActivity"
             android:exported="true"
-            android:theme="@style/Theme.Sokoban" />
-        <activity
-            android:name=".InventoryActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Sokoban" />
+            android:theme="@style/Theme.Appcompat" />
+
     </application>
 
 </manifest>

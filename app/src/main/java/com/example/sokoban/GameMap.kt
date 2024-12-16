@@ -21,7 +21,7 @@ class GameMap(
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'I', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', 'B', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
@@ -42,7 +42,7 @@ class GameMap(
             charArrayOf('#', ' ', ' ', ' ', ' ', 'X', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', 'O', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
+            charArrayOf('#', 'I', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
         ),
         arrayOf( //Level 3
@@ -54,7 +54,7 @@ class GameMap(
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', 'O', ' ', '#'),
             charArrayOf('#', ' ', ' ', 'X', ' ', '#', '#', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', '#', ' ', 'B', '#', ' ', ' ', ' ', 'O', '#'),
+            charArrayOf('#', ' ', 'I', '#', ' ', 'B', '#', ' ', ' ', ' ', 'O', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', '#', ' ', 'P', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
@@ -70,7 +70,7 @@ class GameMap(
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', '#', '#', ' ', '#', '#'),
             charArrayOf('#', ' ', ' ', 'O', 'P', ' ', ' ', '#', ' ', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', '#', 'X', ' ', ' ', '#'),
+            charArrayOf('#', 'I', ' ', ' ', ' ', ' ', ' ', '#', 'X', ' ', ' ', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
         ),
         arrayOf( //Level 5
@@ -84,7 +84,7 @@ class GameMap(
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', 'X', '#', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', '#', '#', '#', '#', '#', ' ', '#', '#'),
             charArrayOf('#', ' ', ' ', 'O', '#', ' ', ' ', ' ', 'B', ' ', ' ', '#'),
-            charArrayOf('#', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', 'P', '#'),
+            charArrayOf('#', 'I', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', 'P', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
         ),
         arrayOf( //Level 6
@@ -97,7 +97,7 @@ class GameMap(
             charArrayOf('#', ' ', ' ', ' ', '#', ' ', '#', '#', '#', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', ' ', ' ', ' ', 'X', '#', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', '#', '#', '#', '#', '#', ' ', '#', '#'),
-            charArrayOf('#', ' ', ' ', 'O', '#', ' ', ' ', ' ', 'B', ' ', ' ', '#'),
+            charArrayOf('#', ' ', ' ', 'O', '#', ' ', 'I', ' ', 'B', ' ', ' ', '#'),
             charArrayOf('#', ' ', ' ', ' ', '#', ' ', ' ', ' ', 'B', ' ', 'P', '#'),
             charArrayOf('#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#')
         )
@@ -111,9 +111,6 @@ class GameMap(
             goalAsset = "goals/jungleTarget.png",
             holeAsset = "holes/jungleTile_broken.png",
             floorAsset = "flooring/jungleTile.png",
-            itemAsset =
-                "items/speedBoots.png",
-
         ),
         2 to Theme(
             wallAsset = "walls/scifiWall.png",
@@ -122,9 +119,6 @@ class GameMap(
             goalAsset = "goals/scifiTarget.png",
             holeAsset = "holes/scifiTile_broken.png",
             floorAsset = "flooring/scifiTile.png",
-            itemAsset =
-                "items/speedBoots.png",
-
         ),
         3 to Theme(
             wallAsset = "walls/fantasyWall.png",
@@ -133,9 +127,6 @@ class GameMap(
             goalAsset = "goals/fantasyTarget.png",
             holeAsset = "holes/fantasyTile_broken.png",
             floorAsset = "flooring/fantasyTile.png",
-            itemAsset =
-                "items/speedBoots.png",
-
         ),
         4 to Theme(
             wallAsset = "walls/ancientWall.png",
@@ -144,9 +135,6 @@ class GameMap(
             goalAsset = "goals/ancientTarget.png",
             holeAsset = "holes/ancientTile_broken.png",
             floorAsset = "flooring/ancientTile.png",
-            itemAsset =
-                "items/speedBoots.png",
-
         ),
         5 to Theme(
             wallAsset = "walls/westernWall.png",
@@ -155,10 +143,7 @@ class GameMap(
             goalAsset = "goals/westernTarget.png",
             holeAsset = "holes/westernTile_broken.png",
             floorAsset = "flooring/westernTile.png",
-            itemAsset =
-                "items/speedBoots.png",
-
-        ),
+            ),
         6 to Theme(
             wallAsset = "walls/horrorWall.png",
             playerAsset = "characters/alien-monster.png", //<-- Switch correct image
@@ -166,10 +151,7 @@ class GameMap(
             goalAsset = "goals/horrorTarget.png",
             holeAsset = "holes/horrorTile_broken.png",
             floorAsset = "flooring/horrorTile.png",
-            itemAsset =
-                "items/speedBoots.png",
-
-            )
+           )
         )
 
 
@@ -197,9 +179,6 @@ class GameMap(
             }
         }
     }
-
-    private val itemAsset = theme.itemAsset
-
 
     fun renderMap() {
             gridGameMap.removeAllViews() // Clear previous views
@@ -229,10 +208,11 @@ class GameMap(
                         'X' -> loadAssetImage(theme.goalAsset)  // Goal
                         'O' -> loadAssetImage(theme.holeAsset) // Hole
                         ' ' -> loadAssetImage(theme.floorAsset) // Floor
-                        'I' -> {
-
-                            loadAssetImage(theme.itemAsset)
-                        }
+                        'I' -> loadAssetImage(theme.floorAsset) // Floor
+                        'S' -> loadAssetImage("items/speedBoots.png")
+                        'M' -> loadAssetImage("items/magicClub.png")
+                        'W' -> loadAssetImage("items/magicWand.png")
+                        'R' -> loadAssetImage("items/raygun.png")
 
                         else -> null  // Empty space (nothing displayed)
                     }
@@ -272,7 +252,6 @@ class GameMap(
         val playerAsset: String,
         val boxAsset: String,
         val goalAsset: String,
-        val itemAsset: String,
         val holeAsset: String,
         val floorAsset: String
     )

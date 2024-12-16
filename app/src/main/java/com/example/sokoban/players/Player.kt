@@ -29,16 +29,17 @@ open class Player(
     val direction: Direction = Direction.RIGHT // Default
     var moveCount: Int = 0
 
+
     enum class Direction {
         UP, DOWN, LEFT, RIGHT
     }
 
-   open fun useItem(item: Item) {
+   open fun useItem(item: Item, range: Int = 0) {
         when (item.type) {
             ItemType.SPEED_BOOTS -> activateSpeedBoots(item)
             ItemType.MAGIC_WAND -> useMagicWand(item)
-            ItemType.RAY_GUN -> useItem(item)
-            ItemType.MAGIC_CLUB -> useItem(item)
+            ItemType.RAY_GUN -> useRayGun(item, range)
+            ItemType.MAGIC_CLUB -> useMagicClub(item, range)
             else -> {
                 Toast.makeText(context, "You cannot use this item!", Toast.LENGTH_SHORT).show()
             }
@@ -78,6 +79,19 @@ open class Player(
             Toast.makeText(context, "$itemName is out of uses!", Toast.LENGTH_SHORT).show()
         }
     }
+    // Base Ray Gun usage, but should be overridden by subclasses
+    open fun useRayGun(item: Item, range: Int) {
+        // Default behavior (might be overridden in Alien class)
+        Toast.makeText(context, "Ray Gun shot!", Toast.LENGTH_SHORT).show()
+        item.usesLeft = maxOf(item.usesLeft - 1, 0)
+    }
+
+    // Base Magic Club usage, but should be overridden by subclasses
+    open fun useMagicClub(item: Item, range: Int) {
+        // Default behavior (might be overridden in Gnome class)
+        Toast.makeText(context, "Magic Club activated!", Toast.LENGTH_SHORT).show()
+        item.usesLeft = maxOf(item.usesLeft - 1, 0)
+    }
 
     fun getPlayerPosition(): Pair<Int, Int> {
         return Pair(currentRow, currentColumn)
@@ -107,9 +121,6 @@ open class Player(
         val oldTile = layout.getChildAt(currentRow * layout.columnCount + currentColumn) as ImageView
         oldTile.setImageBitmap(null)
 
-        // Update appearance
-        updateAppearance(newTile, isSpeedBoostActive = false)
-
         // Update current position
         currentRow = newRow
         currentColumn = newColumn
@@ -117,27 +128,6 @@ open class Player(
         moveCount ++
     }
 
-    open fun updateAppearance(imgPlayer: ImageView, isSpeedBoostActive: Boolean) {
-        try {
-            val assetManager = imgPlayer.context.assets
-            val imagePath = if (isSpeedBoostActive) {
-                "characters/speed_boost_active.png"
-            } else {
-                when (playerType) {
-                    PlayerType.ALIEN -> "characters/alien.png"
-                    PlayerType.GNOME -> "characters/gnome.png"
-                    PlayerType.HUMAN -> "characters/human.png"
-                    else -> "characters/default.png"
-                }
-            }
-            val inputStream = assetManager.open(imagePath)
-            val drawable = Drawable.createFromStream(inputStream, null)
-            imgPlayer.setImageDrawable(drawable)
-            inputStream.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
 
     open fun getTargetTileInDirection(direction: Direction): View? {
         val (newRow, newCol) = when (direction) {
@@ -199,7 +189,6 @@ open class Player(
     enum class PlayerType(val displayName: String) {
         ALIEN("Alien"),
         GNOME("Gnome"),
-        HUMAN("Human"),
         ALL("All")
     }
 }

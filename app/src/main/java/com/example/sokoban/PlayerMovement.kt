@@ -3,11 +3,10 @@ package com.example.sokoban
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
-import com.example.sokoban.gameItems.InventoryService
-import com.example.sokoban.gameItems.Item
 import com.example.sokoban.gameItems.RandomItemGenerator
 
-class PlayerMovement(
+
+class PlayerMovement (
     private val activity: GameActivity,
     private val gameMap: GameMap,
     private val tvGameStatus: TextView
@@ -81,13 +80,17 @@ class PlayerMovement(
             return
         }
 
-
         // Check if the destination is a wall ('#')
         if (gameMap.map[newY][newX] == '#') {
             Toast.makeText(activity, "Can't move there!", Toast.LENGTH_SHORT).show()
             return
         }
-
+        if (gameMap.map[newY][newX] == 'O') {
+            Toast.makeText(activity, "Player fell into a hole! Game Over!", Toast.LENGTH_SHORT).show()
+            Log.d("PlayerMovement", "Player fell into a hole at ($newX, $newY).")
+            activity.showGameOverDialog()
+            return
+        }
 
         Log.d("PlayerMovement", "Player moved to: ($playerX, $playerY)")
 
@@ -98,17 +101,15 @@ class PlayerMovement(
 
             // Check if the new box position is within bounds
             if (boxNewX in 0 until mapWidth && boxNewY in 0 until mapHeight) {
+                // Check if the new position for the box is a hole ('O')
                 if (gameMap.map[boxNewY][boxNewX] == 'O') {
-                    Toast.makeText(
-                        activity,
-                        "The box fell into a hole! Game Over!",
-                        Toast.LENGTH_SHORT
-                    )
+                    Toast.makeText(activity, "Box fell into a hole! Game Over!", Toast.LENGTH_SHORT)
                         .show()
-                    Log.d("PlayerMovement", "The box fell into a hole at ($newX, $newY).")
+                    Log.d("PlayerMovement", "Box fell into a hole at ($boxNewX, $boxNewY).")
                     activity.showGameOverDialog()
                     return
                 }
+
                 if (gameMap.map[boxNewY][boxNewX] == ' ' || gameMap.map[boxNewY][boxNewX] == 'X') {
 
                     when (gameMap.map[boxNewY][boxNewX]) {
@@ -118,11 +119,6 @@ class PlayerMovement(
                             gameMap.map[newY][newX] = 'P'
                             gameMap.map[playerY][playerX] = ' '
 
-
-
-                            // Update player position
-                            playerX = newX
-                            playerY = newY
                         }
 
                         else -> {
@@ -136,13 +132,12 @@ class PlayerMovement(
                 }
             }
         } else {
-            // Check if the player position is a hole ('O')
-            if (gameMap.map[newY][newX] == 'O') {
-                Toast.makeText(activity, "Player fell into a hole! Game Over!", Toast.LENGTH_SHORT)
-                    .show()
-                Log.d("PlayerMovement", "Player fell into a hole at ($newX, $newY).")
-                activity.showGameOverDialog()
-                return
+        // Handle normal player movement (if the player is not interacting with a box)
+        gameMap.map[newY][newX] = 'P'
+            }
+        // Check if the destination has an item
+            if (gameMap.map[newY][newX] in listOf('S', 'M', 'R', 'W')) {
+                pickupItem(newX, newY)
             }
             // Handle normal player movement
             gameMap.map[newY][newX] = 'P'  // Move player to new position
@@ -163,7 +158,6 @@ class PlayerMovement(
             // Increment move count and save game state
             incrementMoveCount()
             saveState()
-        }
 
         // Render the updated map and update game status
         gameMap.renderMap()
@@ -171,6 +165,10 @@ class PlayerMovement(
 
         randomItemGenerator = RandomItemGenerator(1, moveCount)
         // Place random items after moving
+        if (moveCount % 200 == 0 && moveCount != 0) {
+            Log.d("ItemPlacement", "Placing random items after $moveCount moves")
+            randomItemGenerator.placeRandomItems(gameMap.map, 1, moveCount)
+        }
         randomItemGenerator.placeRandomItems(gameMap.map, 1, 50,)
 
         // Check for win condition
@@ -197,6 +195,42 @@ class PlayerMovement(
         }
         return true
     }
+
+
+    // Handle item pickup
+    fun pickupItem(x: Int, y: Int) {
+        // Retrieve the item type from the map
+        val itemType = gameMap.map[y][x]
+        // Perform actions based on the item type
+        when (itemType) {
+            'S' -> {
+                // Perform action for Speed Boots
+                Toast.makeText(activity, "You picked up Speed Boots!", Toast.LENGTH_SHORT).show()
+
+            }
+            'M' -> {
+                // Perform action for Magic Club
+                Toast.makeText(activity, "You picked up a Magic Club!", Toast.LENGTH_SHORT).show()
+
+            }
+            'W' -> {
+                // Perform action for Magic Wand
+                Toast.makeText(activity, "You picked up a Magic Wand!", Toast.LENGTH_SHORT).show()
+            }
+            'R' -> {
+                // Perform action for Ray Gun
+                Toast.makeText(activity, "You picked up a Ray Gun!", Toast.LENGTH_SHORT).show()
+
+            }
+            else -> {
+                Toast.makeText(activity, "Unknown item type!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // After pickup, replace the item cell with a floor tile
+        gameMap.map[y][x] = ' '  // Replace item with floor space
+    }
+
 
     // Data class to hold game state (player position and map state)
     data class GameState(

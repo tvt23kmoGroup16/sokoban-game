@@ -7,7 +7,6 @@ import com.example.sokoban.players.Player
 import kotlin.random.Random
 
 open class RandomItemGenerator(private var level: Int, private var stepsTaken: Int) {
-    var itemsPlaced = false
 
     private val baseRayGunProbability = 25
     private val baseMagicClubProbability = 25
@@ -36,14 +35,13 @@ open class RandomItemGenerator(private var level: Int, private var stepsTaken: I
         level: Int,
         stepsTaken: Int
     ) {
-        if (itemsPlaced) return
         val itemCount = calculateItemCount(level, stepsTaken)
         val availableCells = mutableListOf<Pair<Int, Int>>()
 
         //collecting all the available cells
         map.forEachIndexed { row, cols ->
             cols.forEachIndexed { col, cell ->
-                if (cell == ' ') {  // Only empty spaces or floor tiles
+                if (cell == 'I') {  // Only Item cells
                     availableCells.add(row to col)
                 }
             }
@@ -57,17 +55,12 @@ open class RandomItemGenerator(private var level: Int, private var stepsTaken: I
             val (row, col) = availableCells.removeAt(randomIndex)
 
             // Generate a random item
-            val itemType = generateRandomItem(level, stepsTaken)
+            val itemType = listOf('S', 'M', 'W', 'R').random()
 
-            // Place the item and log placement if successful
-            itemType?.let {
-                map[row][col] = getItemKey(it) // Convert the item to a map character
-                logItemPlacement(row, col, it) // Debug
+            // Replace 'I' with the random item type
+            map[row][col] = itemType
             }
         }
-        itemsPlaced = true
-    }
-
 
     private fun logItemPlacement(row: Int, col: Int, item: ItemType) {
         println("Placed ${item.name} at ($row, $col)")
