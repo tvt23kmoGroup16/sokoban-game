@@ -3,11 +3,14 @@ package com.example.sokoban
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.sokoban.databinding.ActivityLoginBinding
 import com.example.sokoban.db.DatabaseHelper
+
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -30,7 +33,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun btnLoginListener() {
+
         binding.btnLogin.setOnClickListener {
+
             val usernameOrEmail = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
 
@@ -41,13 +46,10 @@ class LoginActivity : AppCompatActivity() {
 
                 if (userId != null) {
                     // Save userId to SharedPreferences
-                    val editor = sharedPreferences.edit()
-                    editor.putLong("userId", userId)
-                    editor.apply()
-
+                    val editor = sharedPreferences.edit().putLong("userId", userId).apply()
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, UserActivity::class.java)
-                    startActivity(intent)
+
+                    startActivity(Intent(this, UserActivity::class.java))
                 } else {
                     Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show()
                 }
@@ -60,15 +62,13 @@ class LoginActivity : AppCompatActivity() {
 
     private fun btnRegisterListener() {
         binding.btnRegister.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this,RegisterActivity::class.java))
         }
     }
 
     private fun btnForgotPasswordListener() {
         binding.btnForgotPassword.setOnClickListener {
-            val intent = Intent(this, ForgotPasswordActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
     }
 }

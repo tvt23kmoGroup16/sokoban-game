@@ -11,6 +11,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sokoban.db.DatabaseHelper
 import com.example.sokoban.db.repositories.SettingsRepository
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 
 class MainMenuActivity : AppCompatActivity() {
 
@@ -20,6 +23,7 @@ class MainMenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_menu)
+
 
         sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
 
@@ -31,19 +35,17 @@ class MainMenuActivity : AppCompatActivity() {
         val btnLeaderboard: Button = findViewById(R.id.btn_leaderboard)
 
         initMusic()
-
         updateLoginButton(btnLogin)
-
         updateProfileCircle(tvProfileCircle)
 
-        // Login/Logout Button logic
+        //Login/Logout Button logic
         btnLogin.setOnClickListener {
             val userId = sharedPreferences.getLong("userId", -1L)
             if (userId == -1L) {
                 // Not logged in go to LoginActivity
                 startActivity(Intent(this, LoginActivity::class.java))
             } else {
-                // Logged in log out the user
+                //Logged in log out the user
                 logoutUser(btnLogin)
                 updateProfileCircle(tvProfileCircle)
             }
@@ -74,8 +76,8 @@ class MainMenuActivity : AppCompatActivity() {
             startActivity(Intent(this, LeaderboardActivity::class.java))
         }
     }
-
-    private fun updateProfileCircle(tvProfileCircle: TextView) {
+    
+        private fun updateProfileCircle(tvProfileCircle: TextView) {
         val userId = sharedPreferences.getLong("userId", -1L)
         if (userId != -1L) {
             // Set profile circle with the first letter of the username

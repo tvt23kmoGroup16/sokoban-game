@@ -1,86 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
+        <!-- Profile Circle -->
 
-    <!-- Login -->
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp" />
+        <!-- Logo -->
 
-    <!-- Profile Circle -->
-    <TextView
-        android:id="@+id/tv_profile_circle"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="-172dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="16dp"
-        android:layout_toEndOf="@id/btn_login"
-        android:background="@drawable/circle_shape"
-        android:gravity="center"
-        android:text=""
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tv_profile_circle"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="-368dp"
+            android:layout_marginTop="79dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toEndOf="@id/btn_login"
+            android:background="@drawable/circle_shape"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
-    <!-- Logo -->
-    <ImageView
-        android:id="@+id/img_logo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_below="@id/btn_login"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/sokobanlogo"
-        android:contentDescription="App Logo"
-        android:layout_marginTop="50dp" />
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@id/btn_login"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:contentDescription="App Logo"
+            android:src="@drawable/sokobanlogo" />
 
-    <!-- Play -->
-    <Button
-        android:id="@+id/btn_play"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Play"
-        android:layout_below="@id/img_logo"
-        android:layout_marginHorizontal="32dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp" />
+        <!-- Play -->
+        <Button
+            android:id="@+id/btn_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="30dp"
+            android:text="Play" />
 
-    <!-- Choose Character -->
-    <Button
-        android:id="@+id/btn_choose_character"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose Character"
-        android:layout_below="@id/btn_play"
-        android:layout_marginHorizontal="32dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        <!-- Choose Character -->
+        <Button
+            android:id="@+id/btn_choose_character"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_play"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="16dp"
+            android:text="Choose Character" />
 
-    <!-- Options -->
-    <Button
-        android:id="@+id/btn_options"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Options"
-        android:layout_below="@id/btn_choose_character"
-        android:layout_marginHorizontal="32dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        <!-- Options -->
+        <Button
+            android:id="@+id/btn_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_choose_character"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="16dp"
+            android:text="Options" />
 
-    <!-- Leaderboard -->
-    <Button
-        android:id="@+id/btn_leaderboard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Leaderboard"
-        android:layout_below="@id/btn_options"
-        android:layout_marginHorizontal="32dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
-</RelativeLayout>
+        <!-- Leaderboard -->
+        <Button
+            android:id="@+id/btn_leaderboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_options"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="16dp"
+            android:text="Leaderboard" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="343dp"
+            android:layout_height="64dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="82dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Login" />
+    </RelativeLayout>
+

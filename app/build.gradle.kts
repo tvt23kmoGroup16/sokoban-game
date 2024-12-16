@@ -5,6 +5,13 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.21"
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+
 android {
     namespace = "com.example.sokoban"
     compileSdk = 35
@@ -40,7 +47,8 @@ android {
     }
     buildFeatures {
         compose = true
-        dataBinding =true
+        dataBinding = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -59,7 +67,9 @@ dependencies {
     implementation (libs.gson)
     implementation (libs.androidx.room.runtime)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.appcompat:appcompat-resources:1.7.0")
     implementation(libs.play.services.games.v2)
+    implementation(libs.material)
     annotationProcessor (libs.androidx.room.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

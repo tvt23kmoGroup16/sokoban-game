@@ -3,11 +3,13 @@ package com.example.sokoban
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.example.sokoban.db.DatabaseHelper
 import com.example.sokoban.db.models.Settings
 import com.example.sokoban.db.repositories.SettingsRepository

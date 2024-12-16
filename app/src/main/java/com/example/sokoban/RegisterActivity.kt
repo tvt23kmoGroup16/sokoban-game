@@ -3,8 +3,10 @@ package com.example.sokoban
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.compose.ui.text.intl.Locale
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.sokoban.databinding.ActivityRegisterBinding

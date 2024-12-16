@@ -6,15 +6,16 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Title for level selection -->
-    <TextView
-        android:id="@+id/tv_select_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Level"
-        android:textSize="24sp"
-        android:layout_marginBottom="24dp"
-        android:textStyle="bold"/>
+
+            <!-- Title for level selection -->
+            <TextView
+                android:id="@+id/tv_select_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Level"
+                android:textSize="24sp"
+                android:layout_marginBottom="24dp"
+                android:textStyle="bold"/>
 
     <!-- Button for continue -->
     <Button
@@ -59,4 +60,5 @@
         android:layout_height="wrap_content"
         android:text="Level 5"
         android:layout_marginBottom="8dp"/>
+
 </LinearLayout>

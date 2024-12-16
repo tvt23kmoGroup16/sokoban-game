@@ -21,12 +21,14 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
             // Validate input field
             if (usernameOrEmail.isEmpty()) {
-                Toast.makeText(this, "Please enter your username or email.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter your username or email.", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
             // Check if user exists by either username or email
-            val userExists = databaseHelper.checkUser(username = usernameOrEmail, email = usernameOrEmail)
+            val userExists =
+                databaseHelper.checkUser(username = usernameOrEmail, email = usernameOrEmail)
 
             if (userExists) {
                 //Proceed with the password reset
@@ -59,3 +61,4 @@ class ForgotPasswordActivity : AppCompatActivity() {
         }
     }
 }
+

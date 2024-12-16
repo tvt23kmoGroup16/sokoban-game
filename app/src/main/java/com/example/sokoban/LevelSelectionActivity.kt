@@ -2,9 +2,11 @@ package com.example.sokoban
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class LevelSelectionActivity : AppCompatActivity() {
 
@@ -37,7 +39,6 @@ class LevelSelectionActivity : AppCompatActivity() {
                 Toast.makeText(this, "No previous level completed!", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         // Set up the level buttons to start specific levels
         btnLevel1.setOnClickListener {
